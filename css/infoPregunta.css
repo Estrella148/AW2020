@@ -1,0 +1,245 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto Slab', serif;
+}
+
+body{
+    background-image: url("fondo.jpg");
+    background-attachment: fixed;
+    background-size: 120%;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Xanh+Mono&display=swap');
+.cabecera{
+    display: flex;
+    text-align: center;
+    font-size: 50px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.555), rgba(255, 166, 0, 0.404), black,  rgba(48, 117, 126, 0.404),  rgba(0, 0, 0, 0.555));
+}
+
+h1{
+    color: orange;
+    text-shadow: 1px 5px rgba(16, 227, 255, 0.726);
+}
+
+.opciones{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 20%;
+}
+
+.titulo{
+    font-size: 90px;
+    width: 60%;
+}
+
+.boton{
+    justify-content: center;
+}
+
+button{
+    width: 200px;
+    padding: 10px;
+    margin: 0px 5px;
+    font-size: 20px;
+    color: white;
+    background-color: rgba(16, 227, 255, 0.726);
+    border: 2px solid orange;
+    border-radius: 5%;
+    cursor: pointer;
+}
+
+.perfil{
+    width: 20%;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+img{
+    border: 2px solid orange;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+}
+
+.nombrePerfil{
+    font-size: 20px;
+}
+
+.buscador{
+    justify-content: center;
+    margin: 30px;
+}
+
+input{
+    padding: 2px;
+    height: 30px;
+    width: 50%;
+    background: linear-gradient(to right, orange, white,  rgba(16, 227, 255, 0.726));
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+
+
+.titulo2{
+    justify-content: center;
+    text-align: center;
+}
+
+h2{
+    font-size: 50px;
+    color: orange;
+    text-shadow: 2px 2px 5px rgba(16, 227, 255, 0.726);
+}
+
+/*INFO PREGUNTA*/
+
+.infoPregunta{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px 200px;   
+    background-color: rgba(0, 0, 0, 0.555);
+    box-shadow: 2px 2px 10px orange;
+}
+
+.vistas{
+    align-items: flex-start;
+    justify-content: center;
+    background: linear-gradient(to right,  orange,white,  rgba(255, 255, 255, 0.514));
+    margin-bottom: 10px;
+}
+
+h3{
+    color: white;
+    font-size: 20px;
+    margin: 5px;
+}
+
+.votos{
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(to right,  rgba(16, 227, 255, 0.726),white, rgba(255, 255, 255, 0.514));
+}
+
+.contadorVoto{
+    align-items: flex-start;
+    width: 15%;
+}
+.voto{
+    width: 85%;
+}
+
+.imgVoto{
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+}
+
+.info{
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.tags{
+    border-radius: 10%;
+    padding: 2px 5px;
+ }
+
+.tag{
+     color: white;
+     font-size: 15px;
+     background-color:rgba(16, 227, 255, 0.726);
+     border: 2px solid orange;
+     padding:1px;
+}
+
+.usuario{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin: 10px 420px;
+    background-color: rgba(255, 166, 0, 0.212);
+    border-radius: 5%;
+}
+
+.nombre{
+    font-size: 15px;
+}
+
+h4{
+    color: white;
+    font-size: 18px;
+}
+
+
+.contadorRespuestas{
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+/*CONTENEDOR RESPUESTAS*/
+.contenedorRespuestas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px 200px;   
+    
+}
+
+.respuestas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px;   
+    background-color: rgba(0, 0, 0, 0.555);
+    box-shadow: 2px 2px 10px rgba(16, 227, 255, 0.726);
+    
+}
+
+
+
+/*TU RESPUESTA*/
+
+.tuRespuesta{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 30px 200px;   
+}
+
+.respuesta{
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.contenido{
+    margin-top: 10px;
+}
+
+.in2{
+    justify-content: center;
+    align-items: center;
+    width:99.2%;
+    min-height: 200px;
+    background: linear-gradient(to top, rgba(16, 227, 255, 0.726), white, white);
+    color: blue;
+    border: 2px blue solid;
+}
+
+.publica{  
+    justify-content: center;
+    text-align: center;
+    margin: 20px 650px; 
+}
