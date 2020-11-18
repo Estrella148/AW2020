@@ -86,8 +86,6 @@ a{
     color: white;
 }
 
-
-
 .titulo2{
     justify-content: center;
     text-align: center;
@@ -111,6 +109,7 @@ h2{
     width: 30%;
     height: 20px;
 }
+
 .filtrar{
     padding: 1px;
     width: 10%;
@@ -150,8 +149,9 @@ h2{
     background-color:rgba(16, 227, 255, 0.726);
     border: 2px solid orange;
     padding: 2px 5px;
- }
- .tag{
-     color: white;
-     font-size: 15px;
- }
+}
+
+.tag{
+    color: white;
+    font-size: 15px;
+}

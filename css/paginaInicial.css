@@ -16,6 +16,7 @@ body{
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Xanh+Mono&display=swap');
 .cabecera{
     display: fixed;
+    flex-wrap: wrap;
     text-align: center;
     font-size: 90px;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.555), rgba(255, 166, 0, 0.404), black,  rgba(48, 117, 126, 0.404),  rgba(0, 0, 0, 0.555));
@@ -28,11 +29,14 @@ h1{
 
 .datosEntrada{
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
 form{
+    flex-grow: 1;
+    flex-shrink: 1;
     display: flex;
     justify-content: center;
     flex-direction: column;

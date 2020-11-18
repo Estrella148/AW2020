@@ -14,6 +14,7 @@ body{
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Xanh+Mono&display=swap');
 .cabecera{
     display: flex;
+    flex-wrap: wrap;
     text-align: center;
     font-size: 50px;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.555), rgba(255, 166, 0, 0.404), black,  rgba(48, 117, 126, 0.404),  rgba(0, 0, 0, 0.555));
@@ -26,6 +27,8 @@ h1{
 
 .opciones{
     display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
     justify-content: center;
     flex-direction: column;
     width: 20%;
@@ -34,6 +37,8 @@ h1{
 .titulo{
     font-size: 90px;
     width: 60%;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .boton{
@@ -54,6 +59,8 @@ button{
 
 .perfil{
     width: 20%;
+    flex-grow: 1;
+    flex-shrink: 1;
     justify-content: center;
     display: flex;
     flex-direction: column;
@@ -71,6 +78,8 @@ img{
 }
 
 .buscador{
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     margin: 30px;
 }
@@ -90,6 +99,8 @@ a{
 
 
 .titulo2{
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     text-align: center;
 }
@@ -104,6 +115,7 @@ h2{
 
 .contenedorPreguntas{
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
     text-align: center;
@@ -113,6 +125,8 @@ h2{
 
 .contadorBoton{
     display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
     justify-content: center;
 }
 
@@ -135,6 +149,8 @@ estilo1{
 
 .preguntasUsuarios{
     display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
     flex-direction: column;
     justify-content: center;
 }
