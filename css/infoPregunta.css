@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     font-family: 'Roboto Slab', serif;
+
 }
 
 body{
@@ -22,6 +23,11 @@ body{
 h1{
     color: orange;
     text-shadow: 1px 5px rgba(16, 227, 255, 0.726);
+}
+
+h1:hover{
+    color:  rgb(16, 227, 255);
+    text-shadow: 1px 5px orange;
 }
 
 .opciones{
@@ -53,10 +59,11 @@ button{
 }
 
 .perfil{
-    width: 20%;
+    width: 10%;
     justify-content: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 img{
@@ -89,17 +96,26 @@ a{
     color: white;
 }
 
-
+a:hover{
+    cursor: pointer;
+    color: orange;
+}
 
 .titulo2{
     justify-content: center;
     text-align: center;
+    background-color: black;
 }
 
 h2{
     font-size: 50px;
     color: orange;
     text-shadow: 2px 2px 5px rgba(16, 227, 255, 0.726);
+}
+
+.h2estilo{
+    color:  rgba(16, 227, 255, 0.856);
+    text-shadow: 2px 2px 5px rgba(192, 128, 9, 0.979);
 }
 
 /*INFO PREGUNTA*/
@@ -109,59 +125,65 @@ h2{
     flex-direction: column;
     justify-content: center;
     margin: 20px 200px;   
-    background-color: rgba(0, 0, 0, 0.555);
-    box-shadow: 2px 2px 10px orange;
+    background-color: rgb(0, 0, 0);
+    box-shadow: 2px 2px 20px orange;
 }
 
 .vistas{
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     justify-content: center;
-    background: linear-gradient(to right,  orange,white,  rgba(255, 255, 255, 0.514));
-    margin-bottom: 10px;
+    background: linear-gradient(to right,  black,orange,black);
 }
 
 h3{
     color: white;
     font-size: 20px;
     margin: 5px;
+    
 }
 
 .votos{
     display: flex;
     justify-content: center;
-    background: linear-gradient(to right,  rgba(16, 227, 255, 0.726),white, rgba(255, 255, 255, 0.514));
+    background: linear-gradient(to right, black,  rgba(16, 227, 255, 0.726),black);
 }
 
 .contadorVoto{
-    align-items: flex-start;
-    width: 15%;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
 }
 .voto{
-    width: 85%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .imgVoto{
     width: 20px;
     height: 20px;
-    margin: 5px;
+    margin: 2px;
 }
 
 .info{
     align-items: flex-start;
     justify-content: center;
+    margin-left: 4px;
 }
 
 .tags{
-    border-radius: 10%;
-    padding: 2px 5px;
- }
-
+    display: flex;
+    margin-left: 4px;
+}
 .tag{
-     color: white;
-     font-size: 15px;
-     background-color:rgba(16, 227, 255, 0.726);
-     border: 2px solid orange;
-     padding:1px;
+    color: white;
+    padding: 2px 5px;
+    font-size: 15px;
+    margin: 2px;
+    background-color:rgba(16, 227, 255, 0.726);
+    border-radius: 10%;
+    border: 2px solid orange;
 }
 
 .usuario{
@@ -190,6 +212,7 @@ h4{
     text-align: center;
     justify-content: center;
     margin-bottom: 10px;
+    background-color: black;
 }
 
 /*CONTENEDOR RESPUESTAS*/
@@ -206,8 +229,8 @@ h4{
     flex-direction: column;
     justify-content: center;
     margin: 20px;   
-    background-color: rgba(0, 0, 0, 0.555);
-    box-shadow: 2px 2px 10px rgba(16, 227, 255, 0.726);
+    background-color: rgb(0, 0, 0);
+    box-shadow: 2px 2px 20px rgba(16, 227, 255, 0.726);
     
 }
 
@@ -218,22 +241,23 @@ h4{
 .tuRespuesta{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin: 30px 200px;   
+    
+    
 }
 
 .respuesta{
     align-items: center;
-    justify-content: center;
-    text-align: center;
+    text-align: center; 
+    background-color: black;
+    
 }
 
 .contenido{
     margin-top: 10px;
+    margin: 30px 200px;  
 }
 
 .in2{
-    justify-content: center;
     align-items: center;
     width:99.2%;
     min-height: 200px;
@@ -246,4 +270,5 @@ h4{
     justify-content: center;
     text-align: center;
     margin: 20px 650px; 
+
 }
