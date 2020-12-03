@@ -1,8 +1,10 @@
 "use strict";
 
 const mysql = require("mysql");
-const config = require("./config");
-const DAOUsuarios = require("./DAOUsuarios");
+//const express=require("express");
+//const app=express();
+const config = require("./js/config");
+const DAOUsuarios = require("./js/DAOUsuarios");
 /*const DAOPreguntas = require("./DAOPreguntas");
 const DAORespuestas = require("./DAORespuestas");
 const DAOMedallas = require("./DAOMedallas");
