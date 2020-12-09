@@ -52,6 +52,14 @@ let daoMedallas = new DAOMedallas(pool);
 
 //USUARIOS
 
+function cb_usuarioCorrecto(err) {
+    if (err) {
+        console.log(err.message);
+    } else {
+        console.log("Usuario y contraseña correctos");
+    }
+}
+
 function cb_insertarUsuario(err) {
     if (err) {
         console.log(err.message);

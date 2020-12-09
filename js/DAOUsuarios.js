@@ -7,14 +7,14 @@ class DAOUsuarios {
     }
 
     /*Usuario correcto: comprueba si en la bbdd el email y la contraseña del usuario son correctar y coinciden con las dadas*/
-    isUserCorrect(correo, pass, callback) {
+    usuarioCorrecto(correo, pass, callback) {
 
         this.pool.getConnection(function(err, connection) {
             if (err) { 
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-            connection.query("SELECT * FROM user WHERE correo = ? AND pass = ?" ,
+            connection.query("SELECT * FROM usuarios WHERE correo = ? AND pass = ?" ,
             [correo,pass],
             function(err, rows) {
                 connection.release(); // devolver al pool la conexión
@@ -57,8 +57,97 @@ class DAOUsuarios {
             }
         }
         );
-
     }
+
+    //get Usuario.
+    getUsuario(id, callback) { 
+
+        this.pool.getConnection(function(err, connection) {
+            if (err) { 
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+            connection.query("SELECT * FROM usuarios WHERE id = ?",[id],
+            function(err, rows) {
+                connection.release(); // devolver al pool la conexión
+                if (result.length == 0) {//la consulta no ha devuelto resultados
+                    callback(new Error("No existe el usuario"));
+                } else {
+                    callback(null, result[0]);
+                }
+            });
+            }
+        }
+        );
+    }
+
+    //Obtenemos el usuario que ha formulado una pregunta en concreto.
+    getUsuarioPreguntas(idPreguntas, callback) { 
+
+        this.pool.getConnection(function(err, connection) {
+            if (err) { 
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+            connection.query("SELECT (nombre, imagen) FROM usuarios JOIN preguntas WHERE id = ?",[idPreguntas],
+            function(err, rows) {
+                connection.release(); // devolver al pool la conexión
+                if (result.length == 0) {//la consulta no ha devuelto resultados
+                    callback(new Error("No existe el usuario"));
+                } else {
+                    callback(null, result[0]);
+                }
+            });
+            }
+        }
+        );
+    }
+
+       //obtener imagen.
+       getImagen(id, callback) { 
+
+        this.pool.getConnection(function(err, connection) {
+            if (err) { 
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+            connection.query("SELECT imagen FROM usuarios WHERE id = ?",[id],
+            function(err, rows) {
+                connection.release(); // devolver al pool la conexión
+                if (result.length == 0) {//la consulta no ha devuelto resultados
+                    callback(new Error("Usuario sin imagen"));
+                    //Query insertar imagen por defecto.
+                } else {
+                    callback(null, result[0]);
+                }
+            });
+            }
+        }
+        );
+    }
+
+    //Mostrar todos los usuarios
+    /*MostrarTodosUsuario(id, callback) { 
+
+        this.pool.getConnection(function(err, connection) {
+            if (err) { 
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+            connection.query("SELECT * FROM usuarios",[],
+            function(err, rows) {
+                connection.release(); // devolver al pool la conexión
+                if (result.length == 0) {//la consulta no ha devuelto resultados
+                    callback(new Error("No existe el usuario"));
+                } else {
+                    callback(null, result[0]);
+                }
+            });
+            }
+        }
+        );
+    }*/
+
 }
 
 
