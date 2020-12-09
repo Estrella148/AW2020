@@ -5,7 +5,6 @@ class DAOPreguntas {
         this.pool = pool;
     }
 
-
         //Mostrar todas las preguntas.
             mostrartodasPreguntas(callback) { 
 
@@ -14,7 +13,7 @@ class DAOPreguntas {
                         callback(new Error("Error de conexión a la base de datos"));
                     }
                     else {
-                    connection.query("SELECT (titulo, cuerpo, etiqueta, fecha) FROM preguntas"),
+                    connection.query("SELECT (titulo, cuerpo, etiqueta, fecha) FROM preguntas",
                     function(err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (result.length == 0) {//la consulta no ha devuelto resultados
@@ -24,9 +23,9 @@ class DAOPreguntas {
                         }
                     });
                     }
+                }
                 );
             }
-    
 
     //Mostrar una pragunta de un usuario.
     mostrarPregunta(id, callback) { 
@@ -49,11 +48,6 @@ class DAOPreguntas {
         }
         );
     }
-
-
-
-
-
 
 }
 
