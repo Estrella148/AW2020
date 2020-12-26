@@ -44,8 +44,6 @@ app.get("/", function (request, response) {
     response.redirect("/paginaInicial");
 });
 
-//USUARIOS
-
 //Login
 app.get("/paginaInicial", function (request, response) {
     response.status(200);
@@ -61,7 +59,7 @@ app.post("/paginaInicial", function (request, response, next) {
         else {
             if (result) {
                 request.session.currentUser = request.body.email;
-                response.redirect("/index");
+                response.redirect("/paginaPrincipal");
             }
             else {
                 response.render("paginaInicial", { errorMsg: "Dirección de correo y/o contraseña no válidos" });
@@ -70,21 +68,33 @@ app.post("/paginaInicial", function (request, response, next) {
     });
 });
 
+app.get("/crearCuenta", function (request, response) {
+    response.status(200);
+    response.render("crearCuenta", { errorMsg: null });
+});
 
-//PREGUNTAS y RESPUESTAS
+//pagina principal
+app.get("/paginaPrincipal", function (request, response) {
+    response.status(200);
+    response.render("paginaPrincipal", { errorMsg: null });
+});
 
-//MEDALLAS
+//Desconectar
+app.get("/cerrarSesion", controlAcceso, function(request, response){
+    request.session.destroy();
+    response.redirect("/paginaInicial");
+})
 
 //Middleware control de acceso
-// function controlAcceso(request, response, next) {
-//     if (request.session.currentUser != undefined) {
-//         response.locals.userEmail = request.session.currentUser;
-//         next();
-//     }
-//     else {
-//         response.redirect("/login");
-//     }
-// }
+function controlAcceso(request, response, next) {
+    if (request.session.currentUser != undefined) {
+        response.locals.userEmail = request.session.currentUser;
+        next();
+    }
+    else {
+        response.redirect("/paginaInicial");
+    }
+}
 
 // Arrancar el servidor
 app.listen(config.port, function (err) {
