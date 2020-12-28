@@ -50,6 +50,11 @@ app.get("/paginaInicial", function (request, response) {
     response.render("paginaInicial", { errorMsg: null });
 });
 
+app.get("/crearCuenta", function (request, response) {
+    response.status(200);
+    response.render("crearCuenta", { errorMsg: null });
+});
+
 //Logearse
 app.post("/paginaInicial", function (request, response, next) {
     daoU.usuarioCorrecto(request.body.email, request.body.password, function (err, result) {
@@ -68,15 +73,51 @@ app.post("/paginaInicial", function (request, response, next) {
     });
 });
 
-app.get("/crearCuenta", function (request, response) {
-    response.status(200);
-    response.render("crearCuenta", { errorMsg: null });
+//pagina principal
+app.get("/paginaPrincipal", controlAcceso, function (request, response) {
+    daoU.getUsuario(request.session.currentUser, function(err,usuario){
+        if (err) {
+            //next(err500(err, request, response));
+        }
+        else {
+            response.status(200);
+            response.render("paginaPrincipal", { usuario: usuario });
+        }
+    })
 });
 
-//pagina principal
-app.get("/paginaPrincipal", function (request, response) {
+app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
     response.status(200);
-    response.render("paginaPrincipal", { errorMsg: null });
+    response.render("perfilUsuario");
+});
+
+//Perfil usuario.
+/* app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+    daoU.getMedallaBronce(request.session.currentUser, function(errBronce, bronces){
+        daoU.getMedallaPlata(request.session.currentUser, function(errPlata, platas){
+            daoU.getMedallaOro(request.session.currentUser, function(errOro, oros){
+                if (errBronce || errPlata || errOro) {
+                    //next(err500(err, request, response));
+                }
+                else {
+                    response.status(200);
+                    response.render("perfilUsuario", { bronces: bronces, platas: platas, oros: oros });
+                }
+            })
+        })
+    })
+}); */
+
+app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+    daoU.MostrarTodosUsuario(function(err, usersList) {
+        if (err) {
+            //next(err500(err, request, response));
+        }
+        else {
+            response.status(200);
+            response.render("busquedaUsuario", { usersList: usersList });
+        }
+    })
 });
 
 //Desconectar
@@ -84,6 +125,20 @@ app.get("/cerrarSesion", controlAcceso, function(request, response){
     request.session.destroy();
     response.redirect("/paginaInicial");
 })
+
+//Insertar usuario
+/* app.post("/crearUsuario", function(request, response) {
+    daoU.insertarUsuario(request.body.Correo, request.body.Contraseña, request.body.Nombre, request.body.???, function (err, usuario){
+        if (err) {
+            //next(err500(err, request, response));
+        }
+        else {
+            response.status(200);
+            response.render("paginaPrincipal", { usuario: usuario } );
+        }
+    }
+}) */
+
 
 //Middleware control de acceso
 function controlAcceso(request, response, next) {
@@ -94,6 +149,20 @@ function controlAcceso(request, response, next) {
     else {
         response.redirect("/paginaInicial");
     }
+}
+
+//Middleware que nos proporciona los datos del usuario en todas las páginas.
+//Lo usamos antes de entrar a otra página.
+function controlAccesoDatosUsuario(request, response, next) {
+    daoU.getUsuario(request.session.currentUser, function(err,usuario){
+        if (err) {
+            //next(err500(err, request, response));
+        }
+        else {
+            response.locals.usuario = usuario;
+            next();
+        }
+    })
 }
 
 // Arrancar el servidor

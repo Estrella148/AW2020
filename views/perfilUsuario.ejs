@@ -18,7 +18,9 @@
                 <button class="sinResponder" type="submit">Sin responder</button>
             </div>
             <div class="boton">
-                <button class="usuarios" type="submit">Usuarios</button>
+                <a href="/busquedaUsuario">
+                    <button class="usuarios" type="submit">Usuarios</button>
+                </a>
             </div>
         </div>
         <div class="titulo">
@@ -29,10 +31,12 @@
                 <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
             </div>
             <div class="nombrePerfil">
-                <a class="estiloEnlace" href="">SHAM</a>
+                <a class="estiloEnlace" href="/perfilUsuario"><%=usuario.nombre%></a>
             </div>
             <div class="boton">
-                <button class="cerrarSesion" type="submit">Cerrar sesión</button>
+                <a href="/cerrarSesion">
+                    <button class="cerrarSesion" type="submit">Cerrar sesión</button>
+                </a>
             </div>
         </div>
     </div>
@@ -49,10 +53,10 @@
                 <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
             </div>
             <div class="nombrePerfil">
-                <a class="estiloEnlace" href="">SHAM</a>
+                <a class="estiloEnlace"><%=usuario.nombre%></a>
             </div>
             <div class="fechaAlta">
-                <h3>Miembro desde 1-10-2020</h3>
+                <h3>Miembro desde <%=usuario.fecha%></h3>
             </div>
         </div>
         <!--grid-->
@@ -63,7 +67,7 @@
 
             <div class="reputacion">
                 <div>Reputación</div>
-                <div>218</div>
+                <div><%=usuario.reputacion%></div>
             </div>
 
             <div class="preguntas">
@@ -106,7 +110,6 @@
                 <div class="logro">Pregunta tacatá</div>
                 <div class="multi">x2</div>
             </div>
-           
         </div>
 
         <div class="conj">

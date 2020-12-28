@@ -3,12 +3,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="..\css\paginaPrincipal.css">
+    <link rel="stylesheet" href="..\css\busquedasUsuario.css">
     <link rel="icon" type="img/png" href="">
-    <title>Pagina Principal</title>
+    <title>Busqueda Usuario</title>
 </head>
 <body>
-    
     <div class="cabecera">
         <div class="opciones">
             <div class="boton">
@@ -45,7 +44,35 @@
         <button class="buscar" type="submit">Buscar</button>
         <input type="search" name="buscador" id="">
     </div>
-    
+
+    <div class="titulo2">
+        <h2>Usuarios</h2>
+    </div>
+
+    <div class="filtrador">
+        <input class= "inFil" type="search" name="buscador" id="">
+        <button class="filtrar" type="submit">Filtrar</button>
+    </div>
+
+    <div class="contenedorUsuarios">
+        
+        <%usersList.forEach(function(user){%>
+            <div class="usuario">
+                <div class="imagen">
+                    <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
+                </div>
+                <div class="nombre">
+                    <a class="estiloEnlace" href=""><%=user.nombre%></a>
+                </div>
+                <div class="reputacion">
+                    <h3><%=user.reputacion%></h3>
+                </div>
+                <div class="tags">
+                    <a class="tag" href="">Tais</a>
+                </div>
+            </div>
+        <%})%>
+    </div>
 
 </body>
 </html>

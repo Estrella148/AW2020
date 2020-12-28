@@ -60,14 +60,15 @@ class DAOUsuarios {
     }
 
     //get Usuario.
-    getUsuario(id, callback) { 
+    //Cambiado el parámetro id por el correo.
+    getUsuario(correo, callback) { 
 
         this.pool.getConnection(function(err, connection) {
             if (err) { 
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-            connection.query("SELECT * FROM usuarios WHERE id = ?",[id],
+            connection.query("SELECT * FROM usuarios WHERE correo = ?",[correo],
             function(err, rows) {
                 connection.release(); // devolver al pool la conexión
                 if (rows.length == 0) {//la consulta no ha devuelto resultados
@@ -147,6 +148,8 @@ class DAOUsuarios {
         );
     }
 
+    //Cambiar el parámetro id de las medallas por el correo???
+
     getMedallaOro(idUsuario, callback) { 
 
         this.pool.getConnection(function(err, connection) {
@@ -209,28 +212,40 @@ class DAOUsuarios {
         }
         );
     }
-    //Mostrar todos los usuarios
-    /*MostrarTodosUsuario(id, callback) { 
+
+    // Mostrar todos los usuarios. Guardamos en un array objetos en los que
+    // cada uno de ellos contiene el id, nombre y reputacion de un usuario.
+    MostrarTodosUsuario(callback) { 
 
         this.pool.getConnection(function(err, connection) {
             if (err) { 
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-            connection.query("SELECT * FROM usuarios",[],
-            function(err, rows) {
-                connection.release(); // devolver al pool la conexión
-                if (result.length == 0) {//la consulta no ha devuelto resultados
-                    callback(new Error("No existe el usuario"));
-                } else {
-                    callback(null, result[0]);
-                }
-            });
+                connection.query("SELECT id, nombre, reputacion FROM usuarios",[],
+                function(err, rows) {
+                    connection.release(); // devolver al pool la conexión
+                    if (rows.length == 0) {//la consulta no ha devuelto resultados
+                        callback(new Error("No existe ningún usuario"));
+                    } else {
+                        let array = new Array();    //Array de usuarios
+                        let object = new Object();
+                        rows.forEach(element => {
+                            if (array[element.id] == undefined) {
+                                object = {
+                                    id: element.id,
+                                    nombre: element.nombre,
+                                    reputacion: element.reputacion
+                                };
+                                array[object.id] = object;
+                            }
+                        });
+                        callback(null, array);//devuelve el array
+                    }
+                });
             }
-        }
-        );
-    }*/
-
+        });
+    }
 }
 
 module.exports = DAOUsuarios;
