@@ -1,21 +1,27 @@
 <!--En la que ya estas iniciado sesión y tienes las opciones de botones a la izquierda-->
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="..\css\paginaPrincipal.css">
     <link rel="icon" type="img/png" href="">
     <title>Pagina Principal</title>
 </head>
+
 <body>
-    
+
     <div class="cabecera">
         <div class="opciones">
             <div class="boton">
-                <button class="preguntas" type="submit">Preguntas</button>
+                <a href="/preguntas">
+                    <button class="preguntas" type="submit">Preguntas</button>
+                </a>
             </div>
             <div class="boton">
-                <button class="sinResponder" type="submit">Sin responder</button>
+                <a href="/preguntasSinResponder">
+                    <button class="sinResponder" type="submit">Sin responder</button>
+                </a>
             </div>
             <div class="boton">
                 <a href="/busquedaUsuario">
@@ -28,10 +34,13 @@
         </div>
         <div class="perfil">
             <div class="imagenPerfil">
-                <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
+                <img
+                    src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
             </div>
             <div class="nombrePerfil">
-                <a class="estiloEnlace" href="/perfilUsuario"><%=usuario.nombre%></a>
+                <a class="estiloEnlace" href="/perfilUsuario">
+                    <%=usuario.nombre%>
+                </a>
             </div>
             <div class="boton">
                 <a href="/cerrarSesion">
@@ -45,7 +54,8 @@
         <button class="buscar" type="submit">Buscar</button>
         <input type="search" name="buscador" id="">
     </div>
-    
+
 
 </body>
+
 </html>

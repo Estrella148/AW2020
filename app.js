@@ -10,6 +10,7 @@ const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
 const fs = require("fs");
 const DAOUsuarios = require("./models/DAOUsuarios");
+const DAOPreguntas = require("./models/DAOPreguntas");
 
 const MySQLStore = new mysqlSession(session);
 const sessionStore = new MySQLStore(config.mysqlConfig);
@@ -28,6 +29,7 @@ app.use(middlewareSession);
 const pool = mysql.createPool(config.mysqlConfig);
 // Crear instancia 
 const daoU = new DAOUsuarios(pool);
+const daoP = new DAOPreguntas(pool);
 
 //Definición del motor y carpeta de plantillas
 app.set("view engine", "ejs");
@@ -91,6 +93,19 @@ app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (re
     response.render("perfilUsuario");
 });
 
+//Insertar usuario
+app.post("/crearCuenta", function(request, response) {
+    daoU.insertarUsuario(request.body.email, request.body.password, request.body.name, request.body.img, function (err, request){
+        if (err) {
+            //next(err500(err, request, response));
+        }
+        else {
+            response.status(200);
+            response.redirect("/paginaInicial");
+        }
+    });
+})
+
 //Perfil usuario.
 /* app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
     daoU.getMedallaBronce(request.session.currentUser, function(errBronce, bronces){
@@ -120,24 +135,27 @@ app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (
     })
 });
 
+app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+   daoP.mostrarTodasPreguntas(function(err, qList) {
+        if (err) {
+            //next(err500(err, request, response));
+        }
+        else {
+            response.status(200);
+            response.render("preguntas", { qList: qList });
+        }
+    })
+});
+
+app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+});
+
 //Desconectar
 app.get("/cerrarSesion", controlAcceso, function(request, response){
     request.session.destroy();
     response.redirect("/paginaInicial");
 })
 
-//Insertar usuario
-/* app.post("/crearUsuario", function(request, response) {
-    daoU.insertarUsuario(request.body.Correo, request.body.Contraseña, request.body.Nombre, request.body.???, function (err, usuario){
-        if (err) {
-            //next(err500(err, request, response));
-        }
-        else {
-            response.status(200);
-            response.render("paginaPrincipal", { usuario: usuario } );
-        }
-    }
-}) */
 
 
 //Middleware control de acceso

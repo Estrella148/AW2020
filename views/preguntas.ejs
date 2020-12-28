@@ -1,0 +1,108 @@
+<!--Vista tras dar al botón de preguntas-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="..\css\preguntas.css">
+    <link rel="icon" type="img/png" href="">
+    <title>Preguntas</title>
+</head>
+
+<body>
+
+    <div class="cabecera">
+        <div class="opciones">
+            <div class="boton">
+                <button class="preguntas" type="submit">Preguntas</button>
+            </div>
+            <div class="boton">
+                <button class="sinResponder" type="submit">Sin responder</button>
+            </div>
+            <div class="boton">
+                <a href="/busquedaUsuario">
+                    <button class="usuarios" type="submit">Usuarios</button>
+                </a>
+            </div>
+        </div>
+        <div class="titulo">
+            <h1>404</h1>
+        </div>
+        <div class="perfil">
+            <div class="imagenPerfil">
+                <img
+                    src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
+            </div>
+            <div class="nombrePerfil">
+                <a class="estiloEnlace" href="/perfilUsuario">
+                    <%=usuario.nombre%>
+                </a>
+            </div>
+            <div class="boton">
+                <a href="/cerrarSesion">
+                    <button class="cerrarSesion" type="submit">Cerrar sesión</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="buscador">
+        <button class="buscar" type="submit">Buscar</button>
+        <input type="search" name="buscador" id="">
+    </div>
+
+    <div class="titulo2">
+        <h2>Todas las preguntas</h2>
+    </div>
+
+    <div class="contenedorPreguntas">
+        <div class="contadorBoton">
+            <div class="contador">
+                <estilo1>
+                    <%=qlist.length%> preguntas
+                </estilo1>
+            </div>
+            <div class="formularPregunta">
+                <a href="/formularPregunta">
+                    <button class="formular" type="submit">Formular Pregunta</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="preguntasUsuarios">
+            <%qList.forEach(function(q){%>
+            <div class="contenidoPregunta">
+                <div class="contenido">
+                    <div class=c>
+                        <a href="" class="estiloP"><%=q.titulo%></a>
+                    </div>
+                    <div class=c>
+                        <estilo2><%=q.cuerpo%></estilo2>
+                    </div>
+                    <div class="tags c">
+                        <%q.etiquetas.forEach(function(e){%>
+                        <div class=tag><a><%=e.nombre%></a></div>
+                        <%})%>
+                    </div>
+                </div>
+                <div class="usuario">
+                    <div class="fecha c">
+                        <estilo2><%=q.fecha%></estilo2>
+                    </div>
+                    <div class="imagen c">
+                        <img src="<%=q.imagen%>">
+                    </div>
+                    <div class="nombre c">
+                        <a href="">"<%=q.nombre%>"</a>
+                    </div>
+                </div>
+            </div>
+            <%})%>
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

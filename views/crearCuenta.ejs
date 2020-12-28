@@ -15,39 +15,39 @@
     </div>
 
     <div class="datosEntrada">
-        <form method="POST" action="/crearUsuario">
+        <form method="POST" action="/crearCuenta">
             <div class="datos">
-                <label for="">Correo*</label>
-                <input type="email" name="Correo" id="">
+                <label>Correo*</label>
+                <input type="email" name="email" required>
             </div>
             <div class="datos">
-                <label for="">Contraseña*</label>
-                <input type="password" name="Contraseña" id="">
+                <label>Contraseña*</label>
+                <input type="password" minlength="4" maxlength="100" name="password" required>
             </div>
             <div class="datos">
-                <label for="">Confirmar contraseña*</label>
-                <input type="password" name="Confirmar" id="">
+                <label>Confirmar contraseña*</label>
+                <input type="password" minlength="4" maxlength="100" required>
             </div>
             <div class="datos">
-                <label for="">Nombre para mostrar*</label>
-                <input type="text" name="Nombre" id="">
+                <label>Nombre para mostrar*</label>
+                <input type="text" minlength="4" maxlength="100" name="name" required>
             </div>
             <div class="datos">
-                <label for="">Imagen de perfil</label>
-                <div class="recuadroImg">
-                    <button class="botonImg" type="file">Seleccionar archivo</button>
-                    <!--<input type="image" name="Imagen" value="Seleccionar" id="">-->
+                <label>Imagen de perfil</label>
+                <div >
+                    <input class="botonImg" type="file" accept="image/png" name="img" id="file_input">
                 </div>
-                
             </div>
             
             <div class="botones">
-                <button type="submit">Iniciar Sesión</button>
-                <a href="/paginaInicial">
-                    <button type="submit">Crear Cuenta</button>
-                </a>
+                <button type="submit">Crear Cuenta</button>
             </div>
         </form>
+        <div>
+            <a href="/paginaInicial">
+                <button type="submit">Iniciar Sesión</button>
+            </a>
+        </div>
     </div>
 
 </body>

@@ -19,19 +19,21 @@
         <form action="/paginaInicial" method="POST">
             <div class="datos">
                 <label for="">Correo*</label>
-                <input type="email" name="email" id="">
+                <input type="email" name="email" required>
             </div>
             <div class="datos">
                 <label for="">Contraseña*</label>
-                <input type="password" name="password" id="">
+                <input type="password" name="password" required>
             </div>
             <div class="botones">
                 <button type="submit">Iniciar Sesión</button>
-                <a href="/crearCuenta">
-                    <button type="submit">Crear Cuenta</button>
-                </a>
             </div>
         </form>
+        <div>
+            <a href="/crearCuenta">
+                <button type="submit">Crear Cuenta</button>
+            </a>
+        </div>
     </div>
     <%if(errorMsg !=null){ %>
         <div class="mensaje">

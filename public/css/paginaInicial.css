@@ -35,9 +35,12 @@ h1:hover{
 
 .datosEntrada{
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    background: rgba(0, 0, 0, 0.473);
+    padding: 2px;
 }
 
 form{
@@ -47,8 +50,7 @@ form{
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    margin: 100px auto;
-    background: rgba(0, 0, 0, 0.473);
+    margin: 5px auto;
 }
 
 .datos{
@@ -93,13 +95,9 @@ button{
     cursor: pointer;
 }
 
-.recuadroImg{
-    border: 1px solid black;
-    background-color: rgba(0, 0, 0, 0.473);
-}
 .botonImg{
-    margin: 5px;
     padding: 5px;
+    color:black;
     background-color: rgba(0, 0, 0, 0.473);
 }
 
