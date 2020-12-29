@@ -48,7 +48,7 @@ app.get("/", function (request, response) {
 });
 
 //Login
-app.get("/paginaInicial", function (request, response) {
+app.get("/paginaInicial", function (request, response, next) {
 
     if (request.session.currentUser) {
         response.redirect("/paginaPrincipal");
@@ -58,7 +58,7 @@ app.get("/paginaInicial", function (request, response) {
     }
 });
 
-app.get("/crearCuenta", function (request, response) {
+app.get("/crearCuenta", function (request, response, next) {
     if (request.session.currentUser) {
         response.redirect("/paginaPrincipal");
     } else {
@@ -72,7 +72,7 @@ app.get("/crearCuenta", function (request, response) {
 app.post("/paginaInicial", function (request, response, next) {
     daoU.usuarioCorrecto(request.body.email, request.body.password, function (err, result) {
         if (err) {
-            next(err500(err, request, response));
+            next(err);
         }
         else {
             if (result) {
@@ -87,10 +87,10 @@ app.post("/paginaInicial", function (request, response, next) {
 });
 
 //pagina principal
-app.get("/paginaPrincipal", controlAcceso, function (request, response) {
+app.get("/paginaPrincipal", controlAcceso, function (request, response, next) {
     daoU.getUsuario(request.session.currentUser, function (err, usuario) {
         if (err) {
-            next(err500(err, request, response));
+            next(err);
         }
         else {
             response.status(200);
@@ -126,7 +126,7 @@ app.post("/crearCuenta", multerFactory.single("img"), function (request, respons
         if (!error) {
             daoU.leerCorreoUsuario(request.body.email, function (err, result) {
                 if (err) {
-                    next(err500(err, request, response));
+                    next(err);
                 }
                 else {
                     if (result != undefined) {
@@ -155,10 +155,13 @@ app.post("/crearCuenta", multerFactory.single("img"), function (request, respons
 })
 
 //Imagenes:
-app.get("/imagenUsuario", controlAcceso, function (request, response, next) {
+app.get("/imagenUsuario/:id?", controlAcceso, function (request, response, next) {
+    if (request.params.id) {
+        response.sendFile(path.join(__dirname, "profile_imgs", request.params.id));
+    }
     daoU.getUserImageName(request.session.currentUser, function (err, image) {
         if (err) {
-            next(err500(err, request, response));
+            next(err);
         }
         else {
             response.sendFile(path.join(__dirname, "profile_imgs", image));
@@ -183,10 +186,10 @@ app.get("/imagenUsuario", controlAcceso, function (request, response, next) {
     })
 }); */
 
-app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
     daoU.MostrarTodosUsuario(function (err, usersList) {
         if (err) {
-            next(err500(err, request, response));
+            next(err);
         }
         else {
             response.status(200);
@@ -195,10 +198,10 @@ app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (
     })
 });
 
-app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
     daoP.mostrarTodasPreguntas(function (err, qList) {
         if (err) {
-            next(err500(err, request, response));
+            next(err);
         }
         else {
             response.status(200);
@@ -207,11 +210,13 @@ app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, function (reques
     })
 });
 
-app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
+    response.status(200);
+    response.render("preguntasSinResponder");
 });
 
 //Desconectar
-app.get("/cerrarSesion", controlAcceso, function (request, response) {
+app.get("/cerrarSesion", controlAcceso, function (request, response, next) {
     request.session.destroy();
     response.redirect("/paginaInicial");
 })
@@ -240,7 +245,7 @@ function img_aleatoria() {
 function controlAccesoDatosUsuario(request, response, next) {
     daoU.getUsuario(request.session.currentUser, function (err, usuario) {
         if (err) {
-            next(err500(err, request, response));
+            next(err);
         }
         else {
             response.locals.usuario = usuario;
@@ -261,7 +266,7 @@ function err404(request, response) {
 function err500(error, request, response, next) {
     response.status(500);
     response.render("error500", {
-        mensaje: error.message
+        mensaje: error.message, pila: error.pila
     });
 }
 

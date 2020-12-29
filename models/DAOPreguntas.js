@@ -13,11 +13,12 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT idPregunta, titulo, cuerpo, etiqueta, fecha nombre, imagen FROM preguntas JOIN etiquetas JOIN usuarios ON preguntas.idPregunta = etiquetas.idPregunta AND preguntas.idUsuario = usuarios.idUsuario",
+                connection.query("SELECT idPregunta, preguntas.titulo, preguntas.cuerpo, preguntas.fecha, usuarios.nombre, usuarios.imagen, etiquetas.nombre as etiqueta \
+                FROM preguntas JOIN etiquetas JOIN usuarios ON preguntas.idPregunta = etiquetas.idPregunta AND preguntas.idUsuario = usuarios.idUsuario",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No hay preguntas"));
+                        if (err) {
+                            callback(new Error("Error acceso a la base de datos"));
                         } else {
                             let array = new Array();    //Array de usuarios
                             let object = new Object();
@@ -27,7 +28,6 @@ class DAOPreguntas {
                                         idPregunta: element.idPregunta,
                                         titulo: element.titulo,
                                         cuerpo: element.cuerpo,
-                                        etiqueta: element.etiqueta,
                                         fecha: element.fecha,
                                         nombre: element.nombre,
                                         imagen: element.imagen,

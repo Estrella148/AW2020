@@ -8,43 +8,8 @@
     <title>Busqueda Usuario</title>
 </head>
 <body>
-    <div class="cabecera">
-        <div class="opciones">
-            <div class="boton">
-                <button class="preguntas" type="submit">Preguntas</button>
-            </div>
-            <div class="boton">
-                <button class="sinResponder" type="submit">Sin responder</button>
-            </div>
-            <div class="boton">
-                <a href="/busquedaUsuario">
-                    <button class="usuarios" type="submit">Usuarios</button>
-                </a>
-            </div>
-        </div>
-        <div class="titulo">
-            <h1>404</h1>
-        </div>
-        <div class="perfil">
-            <div class="imagenPerfil">
-                <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
-            </div>
-            <div class="nombrePerfil">
-                <a class="estiloEnlace" href="/perfilUsuario"><%=usuario.nombre%></a>
-            </div>
-            <div class="boton">
-                <a href="/cerrarSesion">
-                    <button class="cerrarSesion" type="submit">Cerrar sesión</button>
-                </a>
-            </div>
-        </div>
-    </div>
 
-    <div class="buscador">
-        <button class="buscar" type="submit">Buscar</button>
-        <input type="search" name="buscador" id="">
-    </div>
-
+    <%-include("paginaPrincipal")%>
     <div class="titulo2">
         <h2>Usuarios</h2>
     </div>
