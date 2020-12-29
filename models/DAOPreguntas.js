@@ -13,8 +13,10 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT idPregunta, preguntas.titulo, preguntas.cuerpo, preguntas.fecha, usuarios.nombre, usuarios.imagen, etiquetas.nombre as etiqueta \
-                FROM preguntas JOIN etiquetas JOIN usuarios ON preguntas.idPregunta = etiquetas.idPregunta AND preguntas.idUsuario = usuarios.idUsuario",
+                connection.query("SELECT preguntas.idPregunta,  preguntas.titulo,  preguntas.cuerpo,  preguntas.idUsuario, usuarios.id, usuarios.nombre, usuarios.imagen, etiquetas.idPregunta, etiquetas.nombre\
+                FROM preguntas, usuarios, etiquetas\
+                INNER JOIN preguntas.idUsuario ON usuarios.id\
+                INNER JOIN preguntas.idPregunta ON etiquetas.idPregunta;",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
