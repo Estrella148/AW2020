@@ -9,10 +9,10 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
 const fs = require("fs");
-const multer=require("multer");
+const multer = require("multer");
 const DAOUsuarios = require("./models/DAOUsuarios");
 const DAOPreguntas = require("./models/DAOPreguntas");
-const multerFactory=multer();
+const multerFactory = multer({ dest: path.join(__dirname, "profile_imgs") });
 const MySQLStore = new mysqlSession(session);
 const sessionStore = new MySQLStore(config.mysqlConfig);
 const middlewareSession = session({
@@ -72,7 +72,7 @@ app.get("/crearCuenta", function (request, response) {
 app.post("/paginaInicial", function (request, response, next) {
     daoU.usuarioCorrecto(request.body.email, request.body.password, function (err, result) {
         if (err) {
-            //next(err500(err, request, response));
+            next(err500(err, request, response));
         }
         else {
             if (result) {
@@ -90,7 +90,7 @@ app.post("/paginaInicial", function (request, response, next) {
 app.get("/paginaPrincipal", controlAcceso, function (request, response) {
     daoU.getUsuario(request.session.currentUser, function (err, usuario) {
         if (err) {
-            //next(err500(err, request, response));
+            next(err500(err, request, response));
         }
         else {
             response.status(200);
@@ -105,20 +105,52 @@ app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (re
 });
 
 //Insertar usuario
-app.post("/crearCuenta", function (request, response) {
+app.post("/crearCuenta", multerFactory.single("img"), function (request, response, next) {
+    let imagen = img_aleatoria();
+    let error = false;
     if (request.body.password1 === request.body.password2) {
-        daoU.insertarUsuario(request.body.email, request.body.password1, request.body.name, request.body.img, function (err, request) {
-            if (err) {
-                //next(err500(err, request, response));
+        if (request.file) {//si se sube fichero
+            if (request.file.mimetype === "image/png" || request.file.mimetype === "image/jpeg") {
+                imagen = request.file.filename;
+            } else {
+                fs.unlink(request.file.path, function (err) {//para eliminar el archivo cuando hay un error en el registro
+                    if (err) {
+                        next(err500(err, request, response));
+                    }
+                });
+                error = true;
+                response.status(200);
+                response.render("crearCuenta", { errorMsg: "La imagen no tiene el formato correcto, no es .jpg o .png" });
             }
-            else {
-                response.redirect("/paginaInicial");
-            }
-        });
+        }
+        if (!error) {
+            daoU.leerCorreoUsuario(request.body.email, function (err, result) {
+                if (err) {
+                    next(err500(err, request, response));
+                }
+                else {
+                    if (result != undefined) {
+                        response.status(200);
+                        response.render("crearCuenta", { errorMsg: "El usuario ya existe" });
+                    } else {
+                        daoU.insertarUsuario(request.body.email, request.body.password1, request.body.name, imagen, function (err, request) {
+                            if (err) {
+                                next(err);
+                            }
+                            else {
+                                response.redirect("/paginaInicial");
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
     } else {
         response.status(200);
         response.render("crearCuenta", { errorMsg: "Las contraseñas no coinciden" });
     }
+
 
 })
 
@@ -126,15 +158,10 @@ app.post("/crearCuenta", function (request, response) {
 app.get("/imagenUsuario", controlAcceso, function (request, response, next) {
     daoU.getUserImageName(request.session.currentUser, function (err, image) {
         if (err) {
-            next(err);
+            next(err500(err, request, response));
         }
         else {
-            if (image == null) {
-                response.sendFile(path.join(__dirname, "public/img/NoPerfil.jpg"));
-            }
-            else {
-                response.sendFile(path.join(__dirname, "profile_imgs", image));
-            }
+            response.sendFile(path.join(__dirname, "profile_imgs", image));
         }
     });
 });
@@ -159,7 +186,7 @@ app.get("/imagenUsuario", controlAcceso, function (request, response, next) {
 app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
     daoU.MostrarTodosUsuario(function (err, usersList) {
         if (err) {
-            //next(err500(err, request, response));
+            next(err500(err, request, response));
         }
         else {
             response.status(200);
@@ -171,7 +198,7 @@ app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (
 app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
     daoP.mostrarTodasPreguntas(function (err, qList) {
         if (err) {
-            //next(err500(err, request, response));
+            next(err500(err, request, response));
         }
         else {
             response.status(200);
@@ -202,18 +229,40 @@ function controlAcceso(request, response, next) {
     }
 }
 
+function img_aleatoria() {
+    let array = ["estandar1.jpg", "estandar2.png", "estandar3.jpg"];
+    return array[Math.floor(Math.random() * 3)];
+}
+
+
 //Middleware que nos proporciona los datos del usuario en todas las páginas.
 //Lo usamos antes de entrar a otra página.
 function controlAccesoDatosUsuario(request, response, next) {
     daoU.getUsuario(request.session.currentUser, function (err, usuario) {
         if (err) {
-            //next(err500(err, request, response));
+            next(err500(err, request, response));
         }
         else {
             response.locals.usuario = usuario;
             next();
         }
     })
+}
+
+//Manejadores de ruta para errores
+app.use(err404);
+app.use(err500);
+
+function err404(request, response) {
+    response.status(404);
+    response.render("error404", { url: request.url });
+}
+
+function err500(error, request, response, next) {
+    response.status(500);
+    response.render("error500", {
+        mensaje: error.message
+    });
 }
 
 // Arrancar el servidor
