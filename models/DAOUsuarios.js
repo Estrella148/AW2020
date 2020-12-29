@@ -125,28 +125,34 @@ class DAOUsuarios {
         );
     }
 
-       //obtener imagen.
-    getImagen(id, callback) { 
+        /*Imagen de perfil de usuario: Obtienes el fichero de la imagen del usuario identificado por su email*/
+        getUserImageName(email, callback) { 
 
-        this.pool.getConnection(function(err, connection) {
-            if (err) { 
-                callback(new Error("Error de conexión a la base de datos"));
-            }
-            else {
-            connection.query("SELECT imagen FROM usuarios WHERE id = ?",[id],
-            function(err, rows) {
-                connection.release(); // devolver al pool la conexión
-                if (rows.length == 0) {//la consulta no ha devuelto resultados
-                    callback(new Error("Usuario sin imagen"));
-                    //Query insertar imagen por defecto.
-                } else {
-                    callback(null, rows[0]);
+            this.pool.getConnection(function(err, connection) {
+                if (err) { 
+                    callback(new Error("Error de conexión a la base de datos"));
                 }
-            });
+                else {
+                connection.query("SELECT imagen FROM usuarios WHERE correo = ?",[email],
+                function(err, rows) {
+                    connection.release(); // devolver al pool la conexión
+                    if (err) {
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else {
+                        if (rows.length === 0) {
+                            callback(new Error("Usuario no existe")); //no existe el usuario identificado por el email
+                        }
+                        else {
+                            callback(null, rows[0].imagen);//devuelve el fichero de imagen
+                        }           
+                    }
+                });
+                }
             }
+            );
+    
         }
-        );
-    }
 
     //Cambiar el parámetro id de las medallas por el correo???
 

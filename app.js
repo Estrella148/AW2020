@@ -9,9 +9,10 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
 const fs = require("fs");
+const multer=require("multer");
 const DAOUsuarios = require("./models/DAOUsuarios");
 const DAOPreguntas = require("./models/DAOPreguntas");
-
+const multerFactory=multer();
 const MySQLStore = new mysqlSession(session);
 const sessionStore = new MySQLStore(config.mysqlConfig);
 const middlewareSession = session({
@@ -62,6 +63,7 @@ app.get("/crearCuenta", function (request, response) {
         response.redirect("/paginaPrincipal");
     } else {
         response.status(200);
+
         response.render("crearCuenta", { errorMsg: null });
     }
 });
@@ -104,16 +106,38 @@ app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (re
 
 //Insertar usuario
 app.post("/crearCuenta", function (request, response) {
-    daoU.insertarUsuario(request.body.email, request.body.password, request.body.name, request.body.img, function (err, request) {
+    if (request.body.password1 === request.body.password2) {
+        daoU.insertarUsuario(request.body.email, request.body.password1, request.body.name, request.body.img, function (err, request) {
+            if (err) {
+                //next(err500(err, request, response));
+            }
+            else {
+                response.redirect("/paginaInicial");
+            }
+        });
+    } else {
+        response.status(200);
+        response.render("crearCuenta", { errorMsg: "Las contraseñas no coinciden" });
+    }
+
+})
+
+//Imagenes:
+app.get("/imagenUsuario", controlAcceso, function (request, response, next) {
+    daoU.getUserImageName(request.session.currentUser, function (err, image) {
         if (err) {
-            //next(err500(err, request, response));
+            next(err);
         }
         else {
-            response.status(200);
-            response.redirect("/paginaInicial");
+            if (image == null) {
+                response.sendFile(path.join(__dirname, "public/img/NoPerfil.jpg"));
+            }
+            else {
+                response.sendFile(path.join(__dirname, "profile_imgs", image));
+            }
         }
     });
-})
+});
 
 //Perfil usuario.
 /* app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
