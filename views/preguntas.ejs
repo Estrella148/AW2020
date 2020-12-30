@@ -13,14 +13,14 @@
     <%-include("paginaPrincipal")%>
 
     <div class="titulo2">
-        <h2>Todas las preguntas</h2>
+        <h2><%=msg%></h2>
     </div>
 
     <div class="contenedorPreguntas">
         <div class="contadorBoton">
             <div class="contador">
                 <estilo1>
-                    <%=qlist.length%> preguntas
+                    <%=qList.length%> preguntas
                 </estilo1>
             </div>
             <div class="formularPregunta">
@@ -35,26 +35,26 @@
             <div class="contenidoPregunta">
                 <div class="contenido">
                     <div class=c>
-                        <a href="" class="estiloP"><%=q.titulo%></a>
+                        <a href="/infoPregunta" class="estiloP"><%=q.titulo%></a>
                     </div>
                     <div class=c>
                         <estilo2><%=q.cuerpo%></estilo2>
                     </div>
                     <div class="tags c">
                         <%q.etiquetas.forEach(function(e){%>
-                        <div class=tag><a><%=e.nombre%></a></div>
+                        <div class=tag><a><%=e%></a></div>
                         <%})%>
                     </div>
                 </div>
                 <div class="usuario">
                     <div class="fecha c">
-                        <estilo2><%=q.fecha%></estilo2>
+                        <estilo2>Formulada el <%=q.fecha%></estilo2>
                     </div>
                     <div class="imagen c">
                         <img src="/imagenUsuario/<%=q.imagen%>">
                     </div>
                     <div class="nombre c">
-                        <a href="">"<%=q.nombre%>"</a>
+                        <a href=""><%=q.nombre%></a>
                     </div>
                 </div>
             </div>

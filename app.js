@@ -150,8 +150,6 @@ app.post("/crearCuenta", multerFactory.single("img"), function (request, respons
         response.status(200);
         response.render("crearCuenta", { errorMsg: "Las contraseñas no coinciden" });
     }
-
-
 })
 
 //Imagenes:
@@ -198,7 +196,7 @@ app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (
     })
 });
 
-app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
+app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, cAPreguntas, function (request, response, next) {
     daoP.mostrarTodasPreguntas(function (err, qList) {
         if (err) {
             next(err);
@@ -210,9 +208,26 @@ app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, function (reques
     })
 });
 
-app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
+app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, cAPreguntasSinResponder, function (request, response, next) {
+    daoP.mostrarPreguntasSinResponder(function (err, qList) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("preguntasSinResponder", { qList: qList });
+        }
+    })
+});
+
+app.get("/infoPregunta", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
     response.status(200);
-    response.render("preguntasSinResponder");
+    response.render("infoPregunta");
+});
+
+app.get("/formularPregunta", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
+    response.status(200);
+    response.render("formularPregunta");
 });
 
 //Desconectar
@@ -220,8 +235,6 @@ app.get("/cerrarSesion", controlAcceso, function (request, response, next) {
     request.session.destroy();
     response.redirect("/paginaInicial");
 })
-
-
 
 //Middleware control de acceso
 function controlAcceso(request, response, next) {
@@ -239,7 +252,6 @@ function img_aleatoria() {
     return array[Math.floor(Math.random() * 3)];
 }
 
-
 //Middleware que nos proporciona los datos del usuario en todas las páginas.
 //Lo usamos antes de entrar a otra página.
 function controlAccesoDatosUsuario(request, response, next) {
@@ -252,6 +264,16 @@ function controlAccesoDatosUsuario(request, response, next) {
             next();
         }
     })
+}
+
+function cAPreguntas(request, response, next) {
+    response.locals.msg = "Todas las preguntas";
+    next();
+}
+
+function cAPreguntasSinResponder(request, response, next) {
+    response.locals.msg = "Preguntas sin responder";
+    next();
 }
 
 //Manejadores de ruta para errores
