@@ -31,12 +31,12 @@ class DAOPreguntas {
                                         fecha: element.fecha,
                                         nombre: element.usuario,
                                         imagen: element.imagen,
-                                        etiquetas: [element.etiqueta]
+                                        tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
                                 }
                                 else {
-                                    array[object.idPregunta].etiquetas.push(element.etiqueta);
+                                    array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
                             callback(null, array);//devuelve el array
@@ -89,14 +89,14 @@ class DAOPreguntas {
         );
     }
 
-/*     insertarPregunta(email, pregunta, callback) {
+    insertarPregunta(idUsuario,titulo,cuerpo, pregunta, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
                 connection.query("INSERT INTO preguntas (titulo, cuerpo, idUsuario, fecha, contVisitas, contVotosPos, contVotosNeg)\
-                VALUES (?,?,?,?,CURRENT,0,0,0)", [pregunta.titulo, pregunta.cuerpo, pregunta.idUsuario],
+                VALUES (?,?,?,CURDATE(),0,0,0)", [titulo, cuerpo, idUsuario],
                     function (err, rows) {
                         connection.release();
                         if (err) {
@@ -105,12 +105,12 @@ class DAOPreguntas {
                         else {
                             let id = rows.insertId;
                             let array = new Array();//array de etiquetas
-                            pregunta.etiquetas.forEach(element => {
+                            pregunta.tags.forEach(element => {
                                 let val = [id, element];
                                 array.push(val);
                             });
                             //Insertar las etiquetas
-                            connection.query("INSERT INTO tag VALUES ?", [array],
+                            connection.query("INSERT INTO etiquetas VALUES ?", [array],
                                 function (err, rows) {
                                     if (err) {
                                         callback(new Error("Error de acceso a la base de datos"));
@@ -123,7 +123,8 @@ class DAOPreguntas {
                     });
             }
         });
-    } */
+    }
+
     //Mostrar una pragunta de un usuario.
     mostrarPregunta(idPregunta, callback) {
 

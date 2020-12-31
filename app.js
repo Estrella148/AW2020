@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
 const fs = require("fs");
+const utils = require("./utils");
 const multer = require("multer");
 const DAOUsuarios = require("./models/DAOUsuarios");
 const DAOPreguntas = require("./models/DAOPreguntas");
@@ -207,6 +208,17 @@ app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, cAPreguntas, fun
         }
     })
 });
+
+app.post("/formularPregunta", controlAccesoDatosUsuario, function (request, response, next) {
+    daoP.insertarPregunta(response.locals.usuario.id, request.body.titulo, request.body.cuerpo, utils.createTask(request.body.preguntaNueva), function (err) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.redirect("/preguntas");
+        }
+    });
+})
 
 app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, cAPreguntasSinResponder, function (request, response, next) {
     daoP.mostrarPreguntasSinResponder(function (err, qList) {

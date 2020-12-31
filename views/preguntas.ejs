@@ -40,11 +40,16 @@
                     <div class=c>
                         <estilo2><%=q.cuerpo%></estilo2>
                     </div>
+                    <%if(q.tags[0] != null){ %>
                     <div class="tags c">
-                        <%q.etiquetas.forEach(function(e){%>
+                        <%q.tags.forEach(function(e){%>
                         <div class=tag><a><%=e%></a></div>
                         <%})%>
                     </div>
+                    <%}else{%>
+                        <div class="tags c">
+                        </div>
+                    <%}%>
                 </div>
                 <div class="usuario">
                     <div class="fecha c">
