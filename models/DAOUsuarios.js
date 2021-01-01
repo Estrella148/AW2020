@@ -251,7 +251,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT id, nombre, reputacion FROM usuarios", [],
+                connection.query("SELECT id, nombre, reputacion, imagen FROM usuarios",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (rows.length == 0) {//la consulta no ha devuelto resultados
@@ -260,11 +260,12 @@ class DAOUsuarios {
                             let array = new Array();    //Array de usuarios
                             let object = new Object();
                             rows.forEach(element => {
-                                if (array[element.id] == undefined) {
+                                if (array[element.id] === undefined) {
                                     object = {
                                         id: element.id,
                                         nombre: element.nombre,
-                                        reputacion: element.reputacion
+                                        reputacion: element.reputacion,
+                                        imagen: element.imagen
                                     };
                                     array[object.id] = object;
                                 }

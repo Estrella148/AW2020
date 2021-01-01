@@ -12,14 +12,14 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, usuarios.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta",
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta" ,
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
                             callback(new Error("Error acceso a la base de datos"));
                         } else {
-                            let array = new Array();    //Array de usuarios
+                            let array = new Array();   
                             let object = new Object();
                             rows.forEach(element => {
                                 if (array[element.idPregunta] === undefined) {
@@ -38,6 +38,7 @@ class DAOPreguntas {
                                     array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
+                            array.reverse();
                             callback(null, array);//devuelve el array
                         }
                     });
@@ -81,7 +82,7 @@ class DAOPreguntas {
                                 }
                             });
                            
-                            //array= array.filter (n => n["object.titulo"] == filtro);
+                            array.reverse();
                             callback(null, array);//devuelve el array
                         }
                     });
@@ -123,6 +124,7 @@ class DAOPreguntas {
                                     array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
+                            array.reverse();
                             callback(null, array);//devuelve el array
                         }
                     });

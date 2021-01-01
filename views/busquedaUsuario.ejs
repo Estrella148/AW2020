@@ -24,16 +24,16 @@
         <%usersList.forEach(function(user){%>
             <div class="usuario">
                 <div class="imagen">
-                    <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
+                    <img src="/imagenUsuario/<%=user.imagen%>">
                 </div>
                 <div class="nombre">
-                    <a class="estiloEnlace" href=""><%=user.nombre%></a>
+                    <a class="estiloEnlace"><%=user.nombre%></a>
                 </div>
                 <div class="reputacion">
                     <h3><%=user.reputacion%></h3>
                 </div>
                 <div class="tags">
-                    <a class="tag" href="">Tais</a>
+                    <a class="tag">Tais</a>
                 </div>
             </div>
         <%})%>

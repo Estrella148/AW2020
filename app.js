@@ -247,6 +247,18 @@ app.post("/preguntasText", controlAcceso, controlAccesoDatosUsuario, cAPreguntas
     })
 });
 
+app.get("/preguntasEtiqueta", controlAcceso, controlAccesoDatosUsuario, cAPreguntasEtiqueta,function (request, response, next) {
+    daoP.mostrarPreguntasSinResponder(function (err, qList) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("preguntasEtiqueta", { qList: qList });
+        }
+    })
+
+});
 
 app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, cAPreguntasSinResponder, function (request, response, next) {
     daoP.mostrarPreguntasSinResponder(function (err, qList) {
@@ -314,7 +326,13 @@ function cAPreguntasSinResponder(request, response, next) {
 }
 
 function cAPreguntasText(request, response, next) {
-    response.locals.msg = "Resultados de la búsqueda ";
+    response.locals.msg = "Resultados de la búsqueda ''" + request.body.buscador+ "''";
+    next();
+}
+
+
+function cAPreguntasEtiqueta(request, response, next) {
+    response.locals.msg = "Preguntas con la etiqueta []";
     next();
 }
 
