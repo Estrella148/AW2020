@@ -94,6 +94,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
+                connection.query("ALTER TABLE preguntas AUTO_INCREMENT = 0");
                 connection.query("INSERT INTO preguntas (titulo, cuerpo, idUsuario, fecha, contVisitas, contVotosPos, contVotosNeg)\
                 VALUES (?,?,?,CURDATE(),0,0,0)", [titulo, cuerpo, idUsuario],
                     function (err, rows) {

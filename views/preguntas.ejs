@@ -20,7 +20,11 @@
         <div class="contadorBoton">
             <div class="contador">
                 <estilo1>
-                    <%=qList.length-1%> preguntas
+                    <%if(qList.length==0){ %>
+                        <%=qList.length%> preguntas
+                    <%}else{%>   
+                        <%=qList.length-1%> preguntas
+                    <%}%>
                 </estilo1>
             </div>
             <div class="formularPregunta">
@@ -38,7 +42,10 @@
                         <a href="/infoPregunta" class="estiloP"><%=q.titulo%></a>
                     </div>
                     <div class=c>
-                        <estilo2><%=q.cuerpo%></estilo2>
+                        <estilo2><%=q.cuerpo.substring(0, 150)%></estilo2>
+                        <%if(q.cuerpo.length>150){ %>
+                            <estilo2>...</estilo2>
+                        <%}%>
                     </div>
                     <%if(q.tags[0] != null){ %>
                     <div class="tags c">
@@ -65,9 +72,7 @@
             </div>
             <%})%>
         </div>
-
     </div>
-
 
 </body>
 

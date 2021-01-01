@@ -59,7 +59,13 @@
                 </div>
             </div>
         </form>
-
+        <%if(errorMsg !=null){ %>
+            <div class="mensaje">
+                <p>
+                    <%=errorMsg%>
+                </p>
+            </div>
+        <%}%>
 
 </body>
 
