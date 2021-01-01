@@ -55,8 +55,7 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, usuarios.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas INNER JOIN RESPUESTAS WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta\
-                ",
+                FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -73,12 +72,12 @@ class DAOPreguntas {
                                         fecha: element.fecha,
                                         nombre: element.usuario,
                                         imagen: element.imagen,
-                                        etiquetas: [element.etiqueta]
+                                        tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
                                 }
                                 else {
-                                    array[object.idPregunta].etiquetas.push(element.etiqueta);
+                                    array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
                             callback(null, array);//devuelve el array
