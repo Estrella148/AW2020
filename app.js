@@ -198,13 +198,13 @@ app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (
 });
 
 app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, cAPreguntas, function (request, response, next) {
-    daoP.mostrarTodasPreguntas(function (err, qList) {
+    daoP.mostrarTodasPreguntas(function (err, qList, numPreguntas) {
         if (err) {
             next(err);
         }
         else {
             response.status(200);
-            response.render("preguntas", { qList: qList });
+            response.render("preguntas", { qList: qList, numPreguntas: numPreguntas });
         }
     })
 });
@@ -235,39 +235,38 @@ app.post("/formularPregunta", controlAccesoDatosUsuario, function (request, resp
 })
 
 app.post("/preguntasText", controlAcceso, controlAccesoDatosUsuario, cAPreguntasText, function (request, response, next) {
-    console.log(request.body.buscador);
-    daoP.mostrarPreguntasText(request.body.buscador, function (err, qList) {
+    daoP.mostrarPreguntasText(request.body.buscador, function (err, qList, numPreguntas) {
         if (err) {
             next(err);
         }
         else {
             response.status(200);
-            response.render("preguntasText", { qList: qList });
+            response.render("preguntasText", { qList: qList, numPreguntas: numPreguntas });
         }
     })
 });
 
 app.get("/preguntasEtiqueta", controlAcceso, controlAccesoDatosUsuario, cAPreguntasEtiqueta,function (request, response, next) {
-    daoP.mostrarPreguntasSinResponder(function (err, qList) {
+    daoP.mostrarPreguntasSinResponder(function (err, qList, numPreguntas) {
         if (err) {
             next(err);
         }
         else {
             response.status(200);
-            response.render("preguntasEtiqueta", { qList: qList });
+            response.render("preguntasEtiqueta", { qList: qList, numPreguntas: numPreguntas});
         }
     })
 
 });
 
 app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, cAPreguntasSinResponder, function (request, response, next) {
-    daoP.mostrarPreguntasSinResponder(function (err, qList) {
+    daoP.mostrarPreguntasSinResponder(function (err, qList, numPreguntas) {
         if (err) {
             next(err);
         }
         else {
             response.status(200);
-            response.render("preguntasSinResponder", { qList: qList });
+            response.render("preguntasSinResponder", { qList: qList, numPreguntas: numPreguntas });
         }
     })
 });

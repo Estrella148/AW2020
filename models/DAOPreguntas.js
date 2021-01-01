@@ -21,6 +21,7 @@ class DAOPreguntas {
                         } else {
                             let array = new Array();   
                             let object = new Object();
+                            let numPreguntas = 0;
                             rows.forEach(element => {
                                 if (array[element.idPregunta] === undefined) {
                                     object = {
@@ -33,13 +34,14 @@ class DAOPreguntas {
                                         tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
+                                    numPreguntas++;
                                 }
                                 else {
                                     array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
                             array.reverse();
-                            callback(null, array);//devuelve el array
+                            callback(null, array, numPreguntas);//devuelve el array
                         }
                     });
             }
@@ -53,7 +55,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, usuarios.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                 FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta \
                 AND ((preguntas.titulo LIKE '% "+filtro+"%') OR (preguntas.titulo LIKE '"+filtro+"%') OR (preguntas.titulo LIKE '% "+filtro+"') OR (preguntas.titulo LIKE '"+filtro+"') OR \
                 (preguntas.cuerpo LIKE '% "+filtro+"%') OR (preguntas.cuerpo LIKE '"+filtro+"%') OR (preguntas.cuerpo LIKE '% "+filtro+"') OR (preguntas.cuerpo LIKE '"+filtro+"')) ",
@@ -64,6 +66,7 @@ class DAOPreguntas {
                         } else {
                             let array = new Array();    //Array de usuarios
                             let object = new Object();
+                            let numPreguntas = 0;
                             rows.forEach(element => {
                                 if (array[element.idPregunta] === undefined) {
                                     object = {
@@ -76,14 +79,15 @@ class DAOPreguntas {
                                         tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
+                                    numPreguntas++;
                                 }
                                 else {
                                     array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
-                           
+                        
                             array.reverse();
-                            callback(null, array);//devuelve el array
+                            callback(null, array, numPreguntas);//devuelve el array
                         }
                     });
             }
@@ -98,7 +102,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, usuarios.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                 FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
@@ -107,6 +111,7 @@ class DAOPreguntas {
                         } else {
                             let array = new Array();    //Array de usuarios
                             let object = new Object();
+                            let numPreguntas = 0;
                             rows.forEach(element => {
                                 if (array[element.idPregunta] === undefined) {
                                     object = {
@@ -119,13 +124,14 @@ class DAOPreguntas {
                                         tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
+                                    numPreguntas++;
                                 }
                                 else {
                                     array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
                             array.reverse();
-                            callback(null, array);//devuelve el array
+                            callback(null, array, numPreguntas);//devuelve el array
                         }
                     });
             }
