@@ -209,12 +209,18 @@ app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, cAPreguntas, fun
     })
 });
 
+app.get("/formularPregunta", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
+    response.status(200);
+    response.render("formularPregunta", { errorMsg: null });
+
+});
+
 app.post("/formularPregunta", controlAccesoDatosUsuario, function (request, response, next) {
 
-    if(utils.createTask(request.body.preguntaNueva).tags.length>5){
+    if (utils.createTask(request.body.preguntaNueva).tags.length > 5) {
         response.status(200);
         response.render("formularPregunta", { errorMsg: "Como máximo son 5 etiquetas" });
-    }else{
+    } else {
         daoP.insertarPregunta(response.locals.usuario.id, request.body.titulo, request.body.cuerpo, utils.createTask(request.body.preguntaNueva), function (err) {
 
             if (err) {
@@ -225,8 +231,22 @@ app.post("/formularPregunta", controlAccesoDatosUsuario, function (request, resp
             }
         });
     }
-    
+
 })
+
+app.post("/preguntasText", controlAcceso, controlAccesoDatosUsuario, cAPreguntasText, function (request, response, next) {
+    console.log(request.body.buscador);
+    daoP.mostrarPreguntasText(request.body.buscador, function (err, qList) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("preguntasText", { qList: qList });
+        }
+    })
+});
+
 
 app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, cAPreguntasSinResponder, function (request, response, next) {
     daoP.mostrarPreguntasSinResponder(function (err, qList) {
@@ -245,10 +265,7 @@ app.get("/infoPregunta", controlAcceso, controlAccesoDatosUsuario, function (req
     response.render("infoPregunta");
 });
 
-app.get("/formularPregunta", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
-    response.status(200);
-    response.render("formularPregunta");
-});
+
 
 //Desconectar
 app.get("/cerrarSesion", controlAcceso, function (request, response, next) {
@@ -293,6 +310,11 @@ function cAPreguntas(request, response, next) {
 
 function cAPreguntasSinResponder(request, response, next) {
     response.locals.msg = "Preguntas sin responder";
+    next();
+}
+
+function cAPreguntasText(request, response, next) {
+    response.locals.msg = "Resultados de la búsqueda ";
     next();
 }
 
