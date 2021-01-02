@@ -13,7 +13,7 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta" ,
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta", 
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -56,9 +56,53 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta \
-                AND ((preguntas.titulo LIKE '% "+filtro+"%') OR (preguntas.titulo LIKE '"+filtro+"%') OR (preguntas.titulo LIKE '% "+filtro+"') OR (preguntas.titulo LIKE '"+filtro+"') OR \
-                (preguntas.cuerpo LIKE '% "+filtro+"%') OR (preguntas.cuerpo LIKE '"+filtro+"%') OR (preguntas.cuerpo LIKE '% "+filtro+"') OR (preguntas.cuerpo LIKE '"+filtro+"')) ",
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE \
+                preguntas.titulo LIKE ? OR preguntas.cuerpo LIKE ? ",['%'+filtro+'%','%'+filtro+'%'],
+                    function (err, rows) {
+                        connection.release(); // devolver al pool la conexión
+                        if (err) {
+                            callback(err);
+                        } else {
+                            let array = new Array();    //Array de usuarios
+                            let object = new Object();
+                            let numPreguntas = 0;
+                            rows.forEach(element => {
+                                if (array[element.idPregunta] === undefined) {
+                                    object = {
+                                        idPregunta: element.idPregunta,
+                                        titulo: element.titulo,
+                                        cuerpo: element.cuerpo,
+                                        fecha: element.fecha,
+                                        nombre: element.usuario,
+                                        imagen: element.imagen,
+                                        tags: [element.etiqueta]
+                                    };
+                                    array[object.idPregunta] = object;
+                                    numPreguntas++;
+                                }
+                                else {
+                                    array[object.idPregunta].tags.push(element.etiqueta);
+                                }
+                            });
+                        
+                            array.reverse();
+                            callback(null, array, numPreguntas);//devuelve el array
+                        }
+                    });
+            }
+        }
+        );
+    }
+
+    mostrarPreguntasEtiqueta(filtroEtiqueta,callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE preguntas.idPregunta IN (\
+                SELECT preguntas.idPregunta FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE etiquetas.nombre=?)",[filtroEtiqueta],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -102,8 +146,8 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas INNER JOIN usuarios INNER JOIN etiquetas WHERE preguntas.idUsuario = usuarios.id AND preguntas.idPregunta = etiquetas.idPregunta",
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta", 
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {

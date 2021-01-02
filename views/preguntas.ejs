@@ -50,7 +50,7 @@
                     <%if(q.tags[0] != null){ %>
                     <div class="tags c">
                         <%q.tags.forEach(function(e){%>
-                        <div class=tag><a href="/preguntasEtiqueta"><%=e%></a></div>
+                        <div class=tag><a href="/preguntasEtiqueta/<%=e%>"><%=e%></a></div>
                         <%})%>
                     </div>
                     <%}else{%>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="usuario">
                     <div class="fecha c">
-                        <estilo2>Formulada el <%=q.fecha%></estilo2>
+                        <estilo2>Formulada el <%=q.fecha.toDateString()%></estilo2>
                     </div>
                     <div class="imagen c">
                         <img src="/imagenUsuario/<%=q.imagen%>">

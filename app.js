@@ -246,8 +246,8 @@ app.post("/preguntasText", controlAcceso, controlAccesoDatosUsuario, cAPreguntas
     })
 });
 
-app.get("/preguntasEtiqueta", controlAcceso, controlAccesoDatosUsuario, cAPreguntasEtiqueta,function (request, response, next) {
-    daoP.mostrarPreguntasSinResponder(function (err, qList, numPreguntas) {
+app.get("/preguntasEtiqueta/:id", controlAcceso, controlAccesoDatosUsuario, cAPreguntasEtiqueta,function (request, response, next) {
+    daoP.mostrarPreguntasEtiqueta(request.params.id,function (err, qList, numPreguntas) {
         if (err) {
             next(err);
         }
@@ -331,7 +331,7 @@ function cAPreguntasText(request, response, next) {
 
 
 function cAPreguntasEtiqueta(request, response, next) {
-    response.locals.msg = "Preguntas con la etiqueta []";
+    response.locals.msg = "Preguntas con la etiqueta ["+request.params.id+"]";
     next();
 }
 
@@ -347,7 +347,7 @@ function err404(request, response) {
 function err500(error, request, response, next) {
     response.status(500);
     response.render("error500", {
-        mensaje: error.message, pila: error.pila
+        mensaje: error.message
     });
 }
 
