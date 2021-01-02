@@ -9,11 +9,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
-const fs = require("fs");
-const utils = require("./utils");
 const multer = require("multer");
-const DAOUsuarios = require("./models/DAOUsuarios");
-const DAOPreguntas = require("./models/DAOPreguntas");
 const multerFactory = multer({ dest: path.join(__dirname, "profile_imgs") });
 const MySQLStore = new mysqlSession(session);
 const sessionStore = new MySQLStore(config.mysqlConfig);
@@ -28,11 +24,6 @@ const middlewareSession = session({
 const app = express();
 //Crear middleware para la sesión
 app.use(middlewareSession);
-// Crear un pool de conexiones a la base de datos de MySQL
-const pool = mysql.createPool(config.mysqlConfig);
-// Crear instancia 
-const daoU = new DAOUsuarios(pool);
-const daoP = new DAOPreguntas(pool);
 
 //Definición del motor y carpeta de plantillas
 app.set("view engine", "ejs");
@@ -42,14 +33,14 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//Manejadores de ruta
+//MANEJADORES DE RUTA:
 app.use(express.static("public"));
 
 app.get("/", function (request, response) {
     response.redirect("/paginaInicial");
 });
 
-//Login
+//Pagina inicial (logearse)
 app.get("/paginaInicial", function (request, response, next) {
 
     if (request.session.currentUser) {
@@ -59,7 +50,9 @@ app.get("/paginaInicial", function (request, response, next) {
         response.render("paginaInicial", { errorMsg: null });
     }
 });
+app.post("/paginaInicial", controllerU.logearse);
 
+//Crear Cuenta
 app.get("/crearCuenta", function (request, response, next) {
     if (request.session.currentUser) {
         response.redirect("/paginaPrincipal");
@@ -70,23 +63,11 @@ app.get("/crearCuenta", function (request, response, next) {
     }
 });
 
-//Logearse
-app.post("/paginaInicial", controllerU.logearse);
+//Pagina principal
+app.get("/paginaPrincipal", controlAcceso, controllerU.paginaPrincipal);
 
-//pagina principal
-app.get("/paginaPrincipal", controlAcceso, function (request, response, next) {
-    daoU.getUsuario(request.session.currentUser, function (err, usuario) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.status(200);
-            response.render("paginaPrincipal", { usuario: usuario });
-        }
-    })
-});
-
-app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+//Perfil Usuario
+app.get("/perfilUsuario", controlAcceso, controllerU.controlAccesoDatosUsuario, function (request, response) {
     response.status(200);
     response.render("perfilUsuario");
 });
@@ -94,129 +75,37 @@ app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (re
 //Insertar usuario
 app.post("/crearCuenta", multerFactory.single("img"), controllerU.crearCuenta);
 
-//Imagenes:
-app.get("/imagenUsuario/:id?", controlAcceso, function (request, response, next) {
-    if (request.params.id) {
-        response.sendFile(path.join(__dirname, "profile_imgs", request.params.id));
-    }
-    daoU.getUserImageName(request.session.currentUser, function (err, image) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.sendFile(path.join(__dirname, "profile_imgs", image));
-        }
-    });
-});
+//Imagenes de Perfil
+app.get("/imagenUsuario/:id?", controlAcceso, controllerU.imagenPerfil);
 
-//Perfil usuario.
-/* app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
-    daoU.getMedallaBronce(request.session.currentUser, function(errBronce, bronces){
-        daoU.getMedallaPlata(request.session.currentUser, function(errPlata, platas){
-            daoU.getMedallaOro(request.session.currentUser, function(errOro, oros){
-                if (errBronce || errPlata || errOro) {
-                    //next(err500(err, request, response));
-                }
-                else {
-                    response.status(200);
-                    response.render("perfilUsuario", { bronces: bronces, platas: platas, oros: oros });
-                }
-            })
-        })
-    })
-}); */
+//Buscar Usuario
+app.get("/busquedaUsuario", controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.buscarUsuario);
 
-app.get("/busquedaUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
-    daoU.MostrarTodosUsuario(function (err, usersList) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.status(200);
-            response.render("busquedaUsuario", { usersList: usersList });
-        }
-    })
-});
-
-app.get("/preguntas", controlAcceso, controlAccesoDatosUsuario, cAPreguntas, function (request, response, next) {
-    daoP.mostrarTodasPreguntas(function (err, qList, numPreguntas) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.status(200);
-            response.render("preguntas", { qList: qList, numPreguntas: numPreguntas });
-        }
-    })
-});
-
-app.get("/formularPregunta", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
+//Mostrar todas las preguntas
+app.get("/preguntas", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntas, controllerP.mostrarTodas);
+   
+//Formular Pregunta
+app.get("/formularPregunta", controlAcceso, controllerU.controlAccesoDatosUsuario, function (request, response, next) {
     response.status(200);
     response.render("formularPregunta", { errorMsg: null });
-
 });
 
-app.post("/formularPregunta", controlAccesoDatosUsuario, function (request, response, next) {
+app.post("/formularPregunta", controllerU.controlAccesoDatosUsuario,controllerP.formularPregunta);
 
-    if (utils.createTask(request.body.preguntaNueva).tags.length > 5) {
-        response.status(200);
-        response.render("formularPregunta", { errorMsg: "Como máximo son 5 etiquetas" });
-    } else {
-        daoP.insertarPregunta(response.locals.usuario.id, request.body.titulo, request.body.cuerpo, utils.createTask(request.body.preguntaNueva), function (err) {
+//Filtrar por texto
+app.post("/preguntasText", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasText, controllerP.filtroTexto);
 
-            if (err) {
-                next(err);
-            }
-            else {
-                response.redirect("/preguntas");
-            }
-        });
-    }
+//Filtrar por etiqueta
+app.get("/preguntasEtiqueta/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasEtiqueta,controllerP.filtroEtiqueta);
 
-})
+//Preguntas sin responder
+app.get("/preguntasSinResponder", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasSinResponder, controllerP.mostrarPreguntasSinResponder);
 
-app.post("/preguntasText", controlAcceso, controlAccesoDatosUsuario, cAPreguntasText, function (request, response, next) {
-    daoP.mostrarPreguntasText(request.body.buscador, function (err, qList, numPreguntas) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.status(200);
-            response.render("preguntasText", { qList: qList, numPreguntas: numPreguntas });
-        }
-    })
-});
-
-app.get("/preguntasEtiqueta/:id", controlAcceso, controlAccesoDatosUsuario, cAPreguntasEtiqueta,function (request, response, next) {
-    daoP.mostrarPreguntasEtiqueta(request.params.id,function (err, qList, numPreguntas) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.status(200);
-            response.render("preguntasEtiqueta", { qList: qList, numPreguntas: numPreguntas});
-        }
-    })
-
-});
-
-app.get("/preguntasSinResponder", controlAcceso, controlAccesoDatosUsuario, cAPreguntasSinResponder, function (request, response, next) {
-    daoP.mostrarPreguntasSinResponder(function (err, qList, numPreguntas) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.status(200);
-            response.render("preguntasSinResponder", { qList: qList, numPreguntas: numPreguntas });
-        }
-    })
-});
-
-app.get("/infoPregunta", controlAcceso, controlAccesoDatosUsuario, function (request, response, next) {
+//Info Pregunta
+app.get("/infoPregunta", controlAcceso, controllerU.controlAccesoDatosUsuario, function (request, response, next) {
     response.status(200);
     response.render("infoPregunta");
 });
-
 
 
 //Desconectar
@@ -236,21 +125,6 @@ function controlAcceso(request, response, next) {
     }
 }
 
-
-
-//Middleware que nos proporciona los datos del usuario en todas las páginas.
-//Lo usamos antes de entrar a otra página.
-function controlAccesoDatosUsuario(request, response, next) {
-    daoU.getUsuario(request.session.currentUser, function (err, usuario) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.locals.usuario = usuario;
-            next();
-        }
-    })
-}
 
 function cAPreguntas(request, response, next) {
     response.locals.msg = "Todas las preguntas";

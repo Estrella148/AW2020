@@ -8,7 +8,6 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
 const fs = require("fs");
-const utils = require("../utils");
 const multer = require("multer");
 const multerFactory = multer({ dest: path.join(__dirname, "profile_imgs") });
 const MySQLStore = new mysqlSession(session);
@@ -98,7 +97,80 @@ function logearse(request, response, next){
     });
 }
 
+function paginaPrincipal(request, response, next){
+    daoU.getUsuario(request.session.currentUser, function (err, usuario) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("paginaPrincipal", { usuario: usuario });
+        }
+    });
+}
+
+function imagenPerfil(request, response, next){
+    if (request.params.id) {
+        response.sendFile(path.join(__dirname, "profile_imgs", request.params.id));
+    }
+    daoU.getUserImageName(request.session.currentUser, function (err, image) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.sendFile(path.join(__dirname, "profile_imgs", image));
+        }
+    });
+}
+
+function buscarUsuario(request, response, next){
+    daoU.MostrarTodosUsuario(function (err, usersList) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("busquedaUsuario", { usersList: usersList });
+        }
+    })
+}
+
+//Middleware que nos proporciona los datos del usuario en todas las páginas.
+//Lo usamos antes de entrar a otra página.
+function controlAccesoDatosUsuario(request, response, next) {
+    daoU.getUsuario(request.session.currentUser, function (err, usuario) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.locals.usuario = usuario;
+            next();
+        }
+    })
+}
+
 module.exports= {
     crearCuenta:crearCuenta,
-    logearse:logearse
+    logearse:logearse,
+    paginaPrincipal:paginaPrincipal,
+    imagenPerfil:imagenPerfil,
+    buscarUsuario:buscarUsuario,
+    controlAccesoDatosUsuario:controlAccesoDatosUsuario
 };
+
+//Perfil usuario.
+/* app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
+    daoU.getMedallaBronce(request.session.currentUser, function(errBronce, bronces){
+        daoU.getMedallaPlata(request.session.currentUser, function(errPlata, platas){
+            daoU.getMedallaOro(request.session.currentUser, function(errOro, oros){
+                if (errBronce || errPlata || errOro) {
+                    //next(err500(err, request, response));
+                }
+                else {
+                    response.status(200);
+                    response.render("perfilUsuario", { bronces: bronces, platas: platas, oros: oros });
+                }
+            })
+        })
+    })
+}); */
