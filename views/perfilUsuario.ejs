@@ -15,13 +15,13 @@
     <div class= "contenedorEstadisticas">
         <div class="datosUsuario">
             <div class="imagenPerfil">
-                <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
+                <img src="/imagenUsuario/<%=usuario.imagen%>">
             </div>
             <div class="nombrePerfil">
                 <a class="estiloEnlace"><%=usuario.nombre%></a>
             </div>
             <div class="fechaAlta">
-                <h3>Miembro desde <%=usuario.fecha%></h3>
+                <h3>Miembro desde <%=usuario.fecha.toDateString()%></h3>
             </div>
         </div>
         <!--grid-->
