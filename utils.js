@@ -1,3 +1,22 @@
+"use strict";
+const mysql = require("mysql");
+const config = require("./config");
+
+const pool = mysql.createPool({
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database
+});
+
+function obtenerPool(){
+    return pool;
+}
+
+function terminarPool(){
+    pool.end();
+}
+
 function createTask(texto) {
     let obj = new Object();
     if(typeof(texto) == "string") {//Ir al medico @personal @salud
@@ -17,5 +36,7 @@ function createTask(texto) {
 }
 
 module.exports= {
-    createTask
+    createTask:createTask,
+    obtenerPool:obtenerPool,
+    terminarPool:terminarPool
 };

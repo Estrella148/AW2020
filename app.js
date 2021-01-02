@@ -1,5 +1,6 @@
 "use strict";
 const config = require("./config");
+
 const controllerU = require("./controllers/controllerUsuarios");
 const controllerP = require("./controllers/controllerPreguntas");
 const path = require("path");
@@ -70,22 +71,7 @@ app.get("/crearCuenta", function (request, response, next) {
 });
 
 //Logearse
-app.post("/paginaInicial", function (request, response, next) {
-    daoU.usuarioCorrecto(request.body.email, request.body.password, function (err, result) {
-        if (err) {
-            next(err);
-        }
-        else {
-            if (result) {
-                request.session.currentUser = request.body.email;
-                response.redirect("/paginaPrincipal");
-            }
-            else {
-                response.render("paginaInicial", { errorMsg: "Dirección de correo y/o contraseña no válidos" });
-            }
-        }
-    });
-});
+app.post("/paginaInicial", controllerU.logearse);
 
 //pagina principal
 app.get("/paginaPrincipal", controlAcceso, function (request, response, next) {
@@ -106,52 +92,7 @@ app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (re
 });
 
 //Insertar usuario
-app.post("/crearCuenta", multerFactory.single("img"), function (request, response, next) {
-    let imagen = img_aleatoria();
-    let error = false;
-    if (request.body.password1 === request.body.password2) {
-        if (request.file) {//si se sube fichero
-            if (request.file.mimetype === "image/png" || request.file.mimetype === "image/jpeg") {
-                imagen = request.file.filename;
-            } else {
-                fs.unlink(request.file.path, function (err) {//para eliminar el archivo cuando hay un error en el registro
-                    if (err) {
-                        next(err500(err, request, response));
-                    }
-                });
-                error = true;
-                response.status(200);
-                response.render("crearCuenta", { errorMsg: "La imagen no tiene el formato correcto, no es .jpg o .png" });
-            }
-        }
-        if (!error) {
-            daoU.leerCorreoUsuario(request.body.email, function (err, result) {
-                if (err) {
-                    next(err);
-                }
-                else {
-                    if (result != undefined) {
-                        response.status(200);
-                        response.render("crearCuenta", { errorMsg: "El usuario ya existe" });
-                    } else {
-                        daoU.insertarUsuario(request.body.email, request.body.password1, request.body.name, imagen, function (err, request) {
-                            if (err) {
-                                next(err);
-                            }
-                            else {
-                                response.redirect("/paginaInicial");
-                            }
-                        });
-                    }
-                }
-            });
-        }
-
-    } else {
-        response.status(200);
-        response.render("crearCuenta", { errorMsg: "Las contraseñas no coinciden" });
-    }
-})
+app.post("/crearCuenta", multerFactory.single("img"), controllerU.crearCuenta);
 
 //Imagenes:
 app.get("/imagenUsuario/:id?", controlAcceso, function (request, response, next) {
@@ -295,10 +236,7 @@ function controlAcceso(request, response, next) {
     }
 }
 
-function img_aleatoria() {
-    let array = ["estandar1.jpg", "estandar2.png", "estandar3.jpg"];
-    return array[Math.floor(Math.random() * 3)];
-}
+
 
 //Middleware que nos proporciona los datos del usuario en todas las páginas.
 //Lo usamos antes de entrar a otra página.
