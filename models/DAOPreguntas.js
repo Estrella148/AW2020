@@ -13,13 +13,13 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta", 
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
                             callback(new Error("Error acceso a la base de datos"));
                         } else {
-                            let array = new Array();   
+                            let array = new Array();
                             let object = new Object();
                             let numPreguntas = 0;
                             rows.forEach(element => {
@@ -49,7 +49,7 @@ class DAOPreguntas {
         );
     }
 
-    mostrarPreguntasText(filtro,callback) {
+    mostrarPreguntasText(filtro, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
@@ -57,7 +57,7 @@ class DAOPreguntas {
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                 FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE \
-                preguntas.titulo LIKE ? OR preguntas.cuerpo LIKE ? ",['%'+filtro+'%','%'+filtro+'%'],
+                preguntas.titulo LIKE ? OR preguntas.cuerpo LIKE ? ", ['%' + filtro + '%', '%' + filtro + '%'],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -84,7 +84,7 @@ class DAOPreguntas {
                                     array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
-                        
+
                             array.reverse();
                             callback(null, array, numPreguntas);//devuelve el array
                         }
@@ -94,7 +94,7 @@ class DAOPreguntas {
         );
     }
 
-    mostrarPreguntasEtiqueta(filtroEtiqueta,callback) {
+    mostrarPreguntasEtiqueta(filtroEtiqueta, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
@@ -102,7 +102,7 @@ class DAOPreguntas {
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                 FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE preguntas.idPregunta IN (\
-                SELECT preguntas.idPregunta FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE etiquetas.nombre=?)",[filtroEtiqueta],
+                SELECT preguntas.idPregunta FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE etiquetas.nombre=?)", [filtroEtiqueta],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -129,7 +129,7 @@ class DAOPreguntas {
                                     array[object.idPregunta].tags.push(element.etiqueta);
                                 }
                             });
-                        
+
                             array.reverse();
                             callback(null, array, numPreguntas);//devuelve el array
                         }
@@ -147,7 +147,7 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta", 
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -183,7 +183,7 @@ class DAOPreguntas {
         );
     }
 
-    insertarPregunta(idUsuario,titulo,cuerpo, pregunta, callback) {
+    insertarPregunta(idUsuario, titulo, cuerpo, pregunta, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
@@ -220,21 +220,28 @@ class DAOPreguntas {
         });
     }
 
-    //Mostrar una pragunta de un usuario.
-    mostrarPregunta(idPregunta, callback) {
-
+    //Obtener una pregunta y usuario que la ha preguntado
+    getPregunta(id, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT (titulo, cuerpo, etiqueta, fecha, contVisitas, contVotosPos) FROM preguntas JOIN usuarios WHERE idPregunta = ?", [idPregunta],
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, preguntas.fecha, preguntas.contVisitas,preguntas.contVotosPos,preguntas.contVotosNeg,\
+                usuarios.nombre, usuarios.imagen, etiquetas.nombre as etiqueta FROM preguntas JOIN usuarios ON usuarios.id = preguntas.idUsuario JOIN etiquetas ON\
+                preguntas.idPregunta = etiquetas.idPregunta WHERE preguntas.idPregunta = ?", [id],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No existe pregunta"));
-                        } else {
-                            callback(null, rows[0]);
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            let array = new Array();
+                            rows.forEach(element => {
+                                array.push(element.etiqueta);
+
+                            });
+                            callback(null, rows[0], array);
                         }
                     });
             }
@@ -242,26 +249,25 @@ class DAOPreguntas {
         );
     }
 
-    //Obtener una pregunta
-    getPregunta(id, callback) {
-
+    insertarRespuesta(idUsuario, idPregunta, cuerpo,  callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT * FROM preguntas WHERE idPregunta = ?", [id],
+                connection.query("INSERT INTO respuestas (idUsuario, cuerpo, idPregunta, fecha, contVotosPos, contVotosNeg)\
+                VALUES (?,?,?,CURDATE(),0,0)", [idUsuario, cuerpo, idPregunta],
                     function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No existe la pregunta"));
-                        } else {
-                            callback(null, rows[0]);
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
                         }
                     });
             }
-        }
-        );
+        });
     }
 
     mostrarRespuestasporPregunta(idPregunta, callback) {

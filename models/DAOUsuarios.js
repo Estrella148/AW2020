@@ -105,28 +105,6 @@ class DAOUsuarios {
         );
     }
 
-    //Obtenemos el usuario que ha formulado una pregunta en concreto.
-    getUsuarioPreguntas(idPreguntas, callback) {
-
-        this.pool.getConnection(function (err, connection) {
-            if (err) {
-                callback(new Error("Error de conexión a la base de datos"));
-            }
-            else {
-                connection.query("SELECT (nombre, imagen) FROM usuarios JOIN preguntas WHERE id = ?", [idPreguntas],
-                    function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No existe el usuario"));
-                        } else {
-                            callback(null, rows[0]);
-                        }
-                    });
-            }
-        }
-        );
-    }
-
     getUsuarioRespuestas(idRespuestas, callback) {
 
         this.pool.getConnection(function (err, connection) {

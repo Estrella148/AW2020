@@ -97,15 +97,16 @@ app.post("/preguntasText", controlAcceso, controllerU.controlAccesoDatosUsuario,
 
 //Filtrar por etiqueta
 app.get("/preguntasEtiqueta/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasEtiqueta,controllerP.filtroEtiqueta);
+app.post("/preguntasEtiqueta/preguntasText", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasText,controllerP.filtroTexto);
 
 //Preguntas sin responder
 app.get("/preguntasSinResponder", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasSinResponder, controllerP.mostrarPreguntasSinResponder);
 
 //Info Pregunta
-app.get("/infoPregunta", controlAcceso, controllerU.controlAccesoDatosUsuario, function (request, response, next) {
-    response.status(200);
-    response.render("infoPregunta");
-});
+app.get("/infoPregunta/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.infoP);
+
+//Formular respuesta
+app.post("/infoPregunta/?",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.formularRespuesta);
 
 
 //Desconectar

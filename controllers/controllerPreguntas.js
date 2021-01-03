@@ -30,7 +30,7 @@ const pool = mysql.createPool(config.mysqlConfig);
 const daoP = new DAOPreguntas(pool);
 
 
-function mostrarTodas(request, response, next){
+function mostrarTodas(request, response, next) {
     daoP.mostrarTodasPreguntas(function (err, qList, numPreguntas) {
         if (err) {
             next(err);
@@ -42,7 +42,7 @@ function mostrarTodas(request, response, next){
     });
 }
 
-function formularPregunta(request, response, next){
+function formularPregunta(request, response, next) {
     if (utils.createTask(request.body.preguntaNueva).tags.length > 5) {
         response.status(200);
         response.render("formularPregunta", { errorMsg: "Como máximo son 5 etiquetas" });
@@ -59,7 +59,7 @@ function formularPregunta(request, response, next){
     }
 }
 
-function filtroTexto(request, response, next){
+function filtroTexto(request, response, next) {
     daoP.mostrarPreguntasText(request.body.buscador, function (err, qList, numPreguntas) {
         if (err) {
             next(err);
@@ -71,20 +71,21 @@ function filtroTexto(request, response, next){
     })
 }
 
-function filtroEtiqueta(request, response, next){
-    daoP.mostrarPreguntasEtiqueta(request.params.id,function (err, qList, numPreguntas) {
+function filtroEtiqueta(request, response, next) {
+
+    daoP.mostrarPreguntasEtiqueta(request.params.id, function (err, qList, numPreguntas) {
         if (err) {
             next(err);
         }
         else {
             response.status(200);
-            response.render("preguntasEtiqueta", { qList: qList, numPreguntas: numPreguntas});
+            response.render("preguntasEtiqueta", { qList: qList, numPreguntas: numPreguntas });
         }
     })
 
 }
 
-function mostrarPreguntasSinResponder(request, response, next){
+function mostrarPreguntasSinResponder(request, response, next) {
     daoP.mostrarPreguntasSinResponder(function (err, qList, numPreguntas) {
         if (err) {
             next(err);
@@ -96,12 +97,39 @@ function mostrarPreguntasSinResponder(request, response, next){
     })
 }
 
+function infoP(request, response, next) {
+    daoP.getPregunta(request.params.id, function (err, p, etiquetas) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("infoPregunta", { p: p, etiquetas: etiquetas });
+        }
+
+    })
+}
+
+function formularRespuesta(request, response, next) {
+    console.log(response.locals.usuario.id +" "+ request.params.id + " " + request.body.cuerpo);
+    // daoP.insertarRespuesta(response.locals.usuario.id, request.params.id, request.body.cuerpo, function (err) {
+    //     if (err) {
+    //         next(err);
+    //     }
+    //     else {
+    //         response.redirect("/infoPregunta");
+    //     }
+    // });
+
+}
 
 
-module.exports= {
-    mostrarTodas:mostrarTodas,
-    formularPregunta:formularPregunta,
-    filtroTexto:filtroTexto,
-    filtroEtiqueta:filtroEtiqueta,
-    mostrarPreguntasSinResponder:mostrarPreguntasSinResponder
+module.exports = {
+    mostrarTodas: mostrarTodas,
+    formularPregunta: formularPregunta,
+    filtroTexto: filtroTexto,
+    filtroEtiqueta: filtroEtiqueta,
+    mostrarPreguntasSinResponder: mostrarPreguntasSinResponder,
+    infoP: infoP,
+    formularRespuesta: formularRespuesta
 };

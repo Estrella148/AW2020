@@ -39,7 +39,7 @@
             <div class="contenidoPregunta">
                 <div class="contenido">
                     <div class=c>
-                        <a href="/infoPregunta" class="estiloP"><%=q.titulo%></a>
+                        <a href="/infoPregunta/<%=q.idPregunta%>" class="estiloP"><%=q.titulo%></a>
                     </div>
                     <div class=c>
                         <estilo2><%=q.cuerpo.substring(0, 150)%></estilo2>
@@ -50,12 +50,11 @@
                     <%if(q.tags[0] != null){ %>
                     <div class="tags c">
                         <%q.tags.forEach(function(e){%>
-                        <div class=tag><a href="/preguntasEtiqueta/<%=e%>"><%=e%></a></div>
+                            <%if(e != "null"){ %>
+                                <div class=tag><a href="/preguntasEtiqueta/<%=e%>"><%=e%></a></div>
+                            <%}%>
                         <%})%>
                     </div>
-                    <%}else{%>
-                        <div class="tags c">
-                        </div>
                     <%}%>
                 </div>
                 <div class="usuario">

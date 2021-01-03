@@ -12,13 +12,13 @@
     <%-include("paginaPrincipal")%>
 
     <div class="titulo2">
-        <h2>""</h2>
+        <h2><%=p.titulo%></h2>
     </div>
 
     <div class= "infoPregunta">
         <div class="vistas">
             <h3>
-                Vista X veces
+                Vista <%=p.contVisitas%> veces
             </h3>
         </div>
         <div class="votos">
@@ -31,21 +31,24 @@
             </div>
         </div>
         <div class="info">
-            <h3>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur aut cum doloribus repellendus sint unde sapiente pariatur totam! Fugit numquam sed in voluptatum impedit consequatur ad dolor totam. Cum, enim.</h3>
+            <h3><%=p.cuerpo%></h3>
         </div>
-        <div class="tags">
-            <div class=tag><a>css</a></div>
-            <div class=tag><a>css</a></div>
-        </div>
+            <div class="tags">
+                <%etiquetas.forEach(function(e){%>
+                    <%if(e != "null"){ %>
+                        <div class=tag><a href="/preguntasEtiqueta/<%=e%>"><%=e%></a></div>
+                    <%}%>
+                <%})%>    
+            </div>
         <div class="usuario">
             <div class="fecha">
-                <h4>Formulada el 5/11/2020</h4>
+                <h4>Formulada el <%=p.fecha.toDateString()%></h4>
             </div>
             <div class="imagen">
-                <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
+                <img src="/imagenUsuario/<%=p.imagen%>">
             </div>
             <div class="nombre">
-                <a href="">SHAM</a>
+                <a href=""><%=p.nombre%></a>
             </div>
         </div>
     </div> <!--Fin info pregunta-->
@@ -55,57 +58,6 @@
     </div>
 
     <div class="contenedorRespuestas">
-        <div class="respuestas">
-            <div class="votos">
-                <div class="contadorVoto">
-                    <h3> X votos</h3>
-                </div>
-                <div class="voto">
-                    <input class= "imgVoto" type="image" name="positivo" src="../img/pos.jpg" alt="contadorPositivos">
-                    <input class= "imgVoto" type="image" name="negativo" src="../img/neg.jpg" alt="contadorNegativos">
-                </div>
-            </div>
-            <div class="info">
-                <h3>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur aut cum doloribus repellendus sint unde sapiente pariatur totam! Fugit numquam sed in voluptatum impedit consequatur ad dolor totam. Cum, enim.</h3>
-            </div>
-            <div class="usuario">
-                <div class="fecha">
-                    <h4>Formulada el 6/11/2020</h4>
-                </div>
-                <div class="imagen">
-                    <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
-                </div>
-                <div class="nombre">
-                    <a href="">EMY</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="respuestas">
-            <div class="votos">
-                <div class="contadorVoto">
-                    <h3> X votos</h3>
-                </div>
-                <div class="voto">
-                    <input class= "imgVoto" type="image" name="positivo" src="../img/pos.jpg" alt="contadorPositivos">
-                    <input class= "imgVoto" type="image" name="negativo" src="../img/neg.jpg" alt="contadorNegativos">
-                </div>
-            </div>
-            <div class="info">
-                <h3>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur aut cum doloribus repellendus sint unde sapiente pariatur totam! Fugit numquam sed in voluptatum impedit consequatur ad dolor totam. Cum, enim.</h3>
-            </div>
-            <div class="usuario">
-                <div class="fecha">
-                    <h4>Formulada el 6/11/2020</h4>
-                </div>
-                <div class="imagen">
-                    <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
-                </div>
-                <div class="nombre">
-                    <a href="">EMY</a>
-                </div>
-            </div>
-        </div>
 
         <div class="respuestas">
             <div class="votos">
@@ -134,18 +86,20 @@
         </div>
     </div> <!--Fin contenedorRespuestas-->
 
+    <form method="POST" action="/infoPregunta/:<%p.idPregunta%>">
+        <div class="tuRespuesta">
+            <div class="respuesta">
+                <h2 class="h2estilo">Tu respuesta</h2>
+            </div>
+            <div class="contenido">
+                <input class="in2" type="text" name="cuerpo" required>
+            </div>
+        </div><!--Fin tuRespuesta-->
 
-    <div class="tuRespuesta">
-        <div class="respuesta">
-            <h2 class="h2estilo">Tu respuesta</h2>
+        <div class="publica">
+            <button class="publicaRespuesta" type="submit">Publica tu respuesta</button>
         </div>
-        <div class="contenido">
-            <input class="in2" type="text" value= "" name="contenido" id="">
-        </div>
-    </div><!--Fin tuRespuesta-->
-
-    <div class="publica">
-        <button class="publicaRespuesta" type="submit">Publica tu respuesta</button>
-    </div>
+    </form>
+    
 </body>
 </html>
