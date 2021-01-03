@@ -111,15 +111,14 @@ function infoP(request, response, next) {
 }
 
 function formularRespuesta(request, response, next) {
-    console.log(response.locals.usuario.id +" "+ response.locals.idP+ " " + request.body.cuerpo);
-    // daoP.insertarRespuesta(response.locals.usuario.id, request.params.id, request.body.cuerpo, function (err) {
-    //     if (err) {
-    //         next(err);
-    //     }
-    //     else {
-    //         response.redirect("/infoPregunta");
-    //     }
-    // });
+    daoP.insertarRespuesta(response.locals.usuario.id, request.body.IdPregunta, request.body.cuerpo, function (err) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.redirect("/infoPregunta/" + request.body.IdPregunta);
+        }
+    });
 
 }
 
