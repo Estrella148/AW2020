@@ -104,14 +104,14 @@ function infoP(request, response, next) {
         }
         else {
             response.status(200);
-            response.render("infoPregunta", { p: p, etiquetas: etiquetas });
+            response.render("infoPregunta", { p: p, etiquetas: etiquetas});
         }
 
     })
 }
 
 function formularRespuesta(request, response, next) {
-    console.log(response.locals.usuario.id +" "+ request.params.id + " " + request.body.cuerpo);
+    console.log(response.locals.usuario.id +" "+ response.locals.idP+ " " + request.body.cuerpo);
     // daoP.insertarRespuesta(response.locals.usuario.id, request.params.id, request.body.cuerpo, function (err) {
     //     if (err) {
     //         next(err);

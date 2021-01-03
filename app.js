@@ -106,7 +106,7 @@ app.get("/preguntasSinResponder", controlAcceso, controllerU.controlAccesoDatosU
 app.get("/infoPregunta/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.infoP);
 
 //Formular respuesta
-app.post("/infoPregunta/?",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.formularRespuesta);
+app.post("/infoPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.formularRespuesta);
 
 
 //Desconectar
