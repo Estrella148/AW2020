@@ -54,11 +54,11 @@
     </div> <!--Fin info pregunta-->
 
     <div class="contadorRespuestas">
-        <h2 class="h2estilo">X Respuestas</h2>
+        <h2 class="h2estilo"><%=r.length%> respuestas</h2>
     </div>
 
     <div class="contenedorRespuestas">
-
+        <%r.forEach(function(respuesta){%>
         <div class="respuestas">
             <div class="votos">
                 <div class="contadorVoto">
@@ -70,20 +70,21 @@
                 </div>
             </div>
             <div class="info">
-                <h3>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur aut cum doloribus repellendus sint unde sapiente pariatur totam! Fugit numquam sed in voluptatum impedit consequatur ad dolor totam. Cum, enim.</h3>
+                <h3><%=respuesta.cuerpo%></h3>
             </div>
             <div class="usuario">
                 <div class="fecha">
-                    <h4>Formulada el 6/11/2020</h4>
+                    <h4>Formulada el <%=respuesta.fecha.toDateString()%></h4>
                 </div>
                 <div class="imagen">
-                    <img src="C:\Users\ALEJANDRO\Documents\Ingeniería de Software\html5\htmlclase\practicaAW\documentosCss\p1.png">
+                    <img src="/imagenUsuario/<%=respuesta.imagen%>">
                 </div>
                 <div class="nombre">
-                    <a href="">EMY</a>
+                    <a href=""><%=respuesta.nombre%></a>
                 </div>
             </div>
         </div>
+        <%})%> 
     </div> <!--Fin contenedorRespuestas-->
 
     <form method="POST" action="/infoPregunta">

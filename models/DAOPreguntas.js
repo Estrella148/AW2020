@@ -277,13 +277,20 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT (cuerpo, contVotosPos, contVotosNeg, fecha) FROM respuestas JOIN preguntas WHERE respuestas.idPregunta = ?", [idPregunta],
+                connection.query("SELECT respuestas.cuerpo, respuestas.contVotosPos, respuestas.contVotosNeg, respuestas.fecha, usuarios.nombre, usuarios.imagen\
+                FROM respuestas JOIN usuarios ON respuestas.idUsuario = usuarios.id WHERE respuestas.idPregunta = ?", [idPregunta],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No existe respuestas"));
+                        if (err) {//la consulta no ha devuelto resultados
+                            callback(new Error("No existen respuestas"));
                         } else {
-                            callback(null, rows[0]);
+                            let array = new Array();
+                            rows.forEach(element => {
+                                array.push(element);
+
+                            });
+                            array.reverse();
+                            callback(null, array);
                         }
                     });
             }

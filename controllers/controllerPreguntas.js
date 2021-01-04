@@ -103,8 +103,17 @@ function infoP(request, response, next) {
             next(err);
         }
         else {
-            response.status(200);
-            response.render("infoPregunta", { p: p, etiquetas: etiquetas});
+            daoP.mostrarRespuestasporPregunta(request.params.id, function (err, r) {
+                if (err) {
+                    next(err);
+                }
+                else {
+                    response.status(200);
+                    response.render("infoPregunta", { p: p, etiquetas: etiquetas, r: r});
+                }
+        
+            })
+            
         }
 
     })
