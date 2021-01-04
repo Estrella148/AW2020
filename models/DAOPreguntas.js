@@ -147,7 +147,7 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta JOIN respuestas ON preguntas.idPregunta<>respuestas.idPregunta",
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta JOIN respuestas ON preguntas.idPregunta=respuestas.idPregunta",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -219,7 +219,46 @@ class DAOPreguntas {
             }
         });
     }
+    contPregunta(id,callback){
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("UPDATE usuarios SET contPreguntas= contPreguntas+1 WHERE usuarios.id=?", [id],
+                    function (err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+                    });
+            }
+        });
+    }
 
+    contRespuesta(id,callback){
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("UPDATE usuarios SET contRespuestas= contRespuestas+1 WHERE usuarios.id=?", [id],
+                    function (err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+                    });
+            }
+        });
+    }
+    
     //Obtener una pregunta y usuario que la ha preguntado
     getPregunta(id, callback) {
         this.pool.getConnection(function (err, connection) {

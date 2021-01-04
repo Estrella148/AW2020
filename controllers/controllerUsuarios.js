@@ -123,6 +123,7 @@ function imagenPerfil(request, response, next){
     });
 }
 
+
 function buscarUsuario(request, response, next){
     daoU.MostrarTodosUsuario(function (err, usersList) {
         if (err) {

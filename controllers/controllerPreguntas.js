@@ -53,7 +53,14 @@ function formularPregunta(request, response, next) {
                 next(err);
             }
             else {
-                response.redirect("/preguntas");
+                daoP.contPregunta(response.locals.usuario.id, function (err) {
+                    if (err) {
+                        next(err);
+                    }
+                    else {
+                        response.redirect("/preguntas");
+                    }
+                });
             }
         });
     }
@@ -125,7 +132,14 @@ function formularRespuesta(request, response, next) {
             next(err);
         }
         else {
-            response.redirect("/infoPregunta/" + request.body.IdPregunta);
+            daoP.contRespuesta(response.locals.usuario.id, function (err) {
+                if (err) {
+                    next(err);
+                }
+                else {
+                    response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                }
+            });
         }
     });
 
