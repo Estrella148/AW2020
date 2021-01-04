@@ -146,8 +146,10 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta JOIN respuestas ON preguntas.idPregunta=respuestas.idPregunta",
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                 FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta\
+                 WHERE preguntas.idPregunta NOT IN ( SELECT preguntas.idPregunta FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta \
+                    JOIN respuestas WHERE respuestas.idPregunta=preguntas.idPregunta)",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
@@ -258,7 +260,7 @@ class DAOPreguntas {
             }
         });
     }
-    
+
     //Obtener una pregunta y usuario que la ha preguntado
     getPregunta(id, callback) {
         this.pool.getConnection(function (err, connection) {
