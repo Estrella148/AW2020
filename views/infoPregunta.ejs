@@ -1,107 +1,138 @@
 <!--Vista tras dar al botón de preguntas-->
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="..\css\infoPregunta.css">
     <link rel="icon" type="img/png" href="">
     <title>Info Pregunta</title>
 </head>
+
 <body>
-    
+
     <%-include("paginaPrincipal")%>
 
-    <div class="titulo2">
-        <h2><%=p.titulo%></h2>
-    </div>
+        <div class="titulo2">
+            <h2>
+                <%=p.titulo%>
+            </h2>
+        </div>
 
-    <div class= "infoPregunta">
-        <div class="vistas">
-            <h3>
-                Vista <%=p.contVisitas%> veces
-            </h3>
-        </div>
-        <div class="votos">
-            <div class="contadorVoto">
-                <h3> X votos</h3>
+        <div class="infoPregunta">
+            <div class="vistas">
+                <h3>
+                    Vista <%=p.contVisitas%> veces
+                </h3>
             </div>
-            <div class="voto">
-                    <input class= "imgVoto" type="image" name="positivo" src="../img/pos.jpg" alt="contadorPositivos">
-                    <input class= "imgVoto" type="image" name="negativo" src="../img/neg.jpg" alt="contadorNegativos">
-            </div>
-        </div>
-        <div class="info">
-            <h3><%=p.cuerpo%></h3>
-        </div>
-            <div class="tags">
-                <%etiquetas.forEach(function(e){%>
-                    <%if(e != "null"){ %>
-                        <div class=tag><a href="/preguntasEtiqueta/<%=e%>"><%=e%></a></div>
-                    <%}%>
-                <%})%>    
-            </div>
-        <div class="usuario">
-            <div class="fecha">
-                <h4>Formulada el <%=p.fecha.toDateString()%></h4>
-            </div>
-            <div class="imagen">
-                <img src="/imagenUsuario/<%=p.imagen%>">
-            </div>
-            <div class="nombre">
-                <a href=""><%=p.nombre%></a>
-            </div>
-        </div>
-    </div> <!--Fin info pregunta-->
-
-    <div class="contadorRespuestas">
-        <h2 class="h2estilo"><%=r.length%> respuestas</h2>
-    </div>
-
-    <div class="contenedorRespuestas">
-        <%r.forEach(function(respuesta){%>
-        <div class="respuestas">
             <div class="votos">
-                <div class="contadorVoto">
-                    <h3> X votos</h3>
-                </div>
-                <div class="voto">
-                    <input class= "imgVoto" type="image" name="positivo" src="../img/pos.jpg" alt="contadorPositivos">
-                    <input class= "imgVoto" type="image" name="negativo" src="../img/neg.jpg" alt="contadorNegativos">
-                </div>
+                <form method="POST" action="/votosPregunta">
+                    <div class="contadorVoto">
+                        <h3>
+                            <%=p.contVotos%> votos
+                        </h3>
+                    </div>
+                    <div class="voto">
+                        <input type="hidden" name="IdPregunta" value=<%=p.idPregunta%>>
+                        <button class="imgVotoP" type="submit" name=positivo value=10 alt="contadorPositivos"></button>
+                        <button class="imgVotoN" type="submit" name=negativo value=-2 alt="contadorNegativos"></button>
+                    </div>
+                </form>
             </div>
             <div class="info">
-                <h3><%=respuesta.cuerpo%></h3>
+                <h3>
+                    <%=p.cuerpo%>
+                </h3>
+            </div>
+            <div class="tags">
+                <%etiquetas.forEach(function(e){%>
+                    <%if(e !="null" ){ %>
+                        <div class=tag><a href="/preguntasEtiqueta/<%=e%>">
+                                <%=e%>
+                            </a></div>
+                        <%}%>
+                            <%})%>
             </div>
             <div class="usuario">
                 <div class="fecha">
-                    <h4>Formulada el <%=respuesta.fecha.toDateString()%></h4>
+                    <h4>Formulada el <%=p.fecha.toDateString()%>
+                    </h4>
                 </div>
                 <div class="imagen">
-                    <img src="/imagenUsuario/<%=respuesta.imagen%>">
+                    <img src="/imagenUsuario/<%=p.imagen%>">
                 </div>
                 <div class="nombre">
-                    <a href=""><%=respuesta.nombre%></a>
+                    <a href="">
+                        <%=p.nombre%>
+                    </a>
                 </div>
             </div>
         </div>
-        <%})%> 
-    </div> <!--Fin contenedorRespuestas-->
+        <!--Fin info pregunta-->
 
-    <form method="POST" action="/infoPregunta">
-        <div class="tuRespuesta">
-            <div class="respuesta">
-                <h2 class="h2estilo">Tu respuesta</h2>
-            </div>
-            <div class="contenido">
-                <input type="hidden" name="IdPregunta" value=<%=p.idPregunta%>>
-                <input class="in2" type="text" name="cuerpo" required>
-            </div>
-        </div><!--Fin tuRespuesta-->
-
-        <div class="publica">
-            <button class="publicaPregunta" type="submit">Publica tu respuesta</button>
+        <div class="contadorRespuestas">
+            <h2 class="h2estilo">
+                <%=r.length%> respuestas
+            </h2>
         </div>
-    </form>
-    
+
+        <div class="contenedorRespuestas">
+            <%r.forEach(function(respuesta){%>
+                <div class="respuestas">
+                    <div class="votos">
+                        <div class="contadorVoto">
+                            <h3>
+                                <%=respuesta.contVotos%> votos
+                            </h3>
+                        </div>
+                        <div class="voto">
+                            <button class="imgVotoP" type="submit" name=positivo value=10
+                                alt="contadorPositivos"></button>
+                            <button class="imgVotoN" type="submit" name=negativo value=-2
+                                alt="contadorNegativos"></button>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <h3>
+                            <%=respuesta.cuerpo%>
+                        </h3>
+                    </div>
+                    <div class="usuario">
+                        <div class="fecha">
+                            <h4>Formulada el <%=respuesta.fecha.toDateString()%>
+                            </h4>
+                        </div>
+                        <div class="imagen">
+                            <img src="/imagenUsuario/<%=respuesta.imagen%>">
+                        </div>
+                        <div class="nombre">
+                            <a href="">
+                                <%=respuesta.nombre%>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <%})%>
+        </div>
+        <!--Fin contenedorRespuestas-->
+
+        <form method="POST" action="/infoPregunta">
+            <div class="tuRespuesta">
+                <div class="respuesta">
+                    <h2 class="h2estilo">Tu respuesta</h2>
+                </div>
+                <div class="contenido">
+                    <input type="hidden" name="IdPregunta" value=<%=p.idPregunta%>>
+                    <input class="in2" type="text" name="cuerpo" required>
+                </div>
+            </div>
+            <!--Fin tuRespuesta-->
+
+            <div class="publica">
+                <button class="publicaPregunta" type="submit">Publica tu respuesta</button>
+            </div>
+        </form>
+
 </body>
+
 </html>

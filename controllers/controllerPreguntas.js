@@ -115,12 +115,21 @@ function infoP(request, response, next) {
                     next(err);
                 }
                 else {
-                    response.status(200);
-                    response.render("infoPregunta", { p: p, etiquetas: etiquetas, r: r});
+                    daoP.visitaPregunta(request.params.id, response.locals.usuario.id, function (err) {
+                        if (err) {
+                            next(err);
+                        }
+                        else {
+
+                            response.status(200);
+                            response.render("infoPregunta", { p: p, etiquetas: etiquetas, r: r });
+                        }
+
+                    })
                 }
-        
+
             })
-            
+
         }
 
     })
@@ -145,6 +154,38 @@ function formularRespuesta(request, response, next) {
 
 }
 
+function actualizarVotos(request, response, next) {
+    console.log(request.body.positivo + " " + request.body.negativo);
+    daoP.contVotos(response.locals.usuario.id, request.body.IdPregunta, function (err, votado) {
+        if (err) {
+            next(err);
+        }
+        else {
+            console.log(votado);
+            if(request.body.positivo!=undefined && votado==="true"){
+                daoP.reputacion(request.body.IdPregunta, request.body.positivo,function (err) {
+                    if (err) {
+                        next(err);
+                    }
+                    else {
+                        response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                    }
+                });
+            }else if (request.body.negativo!=undefined && votado==="true"){
+                daoP.reputacion(request.body.IdPregunta, request.body.negativo,function (err) {
+                    if (err) {
+                        next(err);
+                    }
+                    else {
+                        response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                    }
+                });
+            }else{
+                response.redirect("/infoPregunta/" + request.body.IdPregunta);
+            }
+        }
+    });
+}
 
 module.exports = {
     mostrarTodas: mostrarTodas,
@@ -153,5 +194,6 @@ module.exports = {
     filtroEtiqueta: filtroEtiqueta,
     mostrarPreguntasSinResponder: mostrarPreguntasSinResponder,
     infoP: infoP,
-    formularRespuesta: formularRespuesta
+    formularRespuesta: formularRespuesta,
+    actualizarVotos: actualizarVotos
 };

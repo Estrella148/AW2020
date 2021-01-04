@@ -44,7 +44,7 @@ class DAOUsuarios {
             }
             else {
                 connection.query("INSERT INTO usuarios (correo, pass, nombre, imagen, reputacion, contPreguntas, contRespuestas, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE())",
-                    [correo, pass, nombre, imagen, 0, 0, 0],
+                    [correo, pass, nombre, imagen, 1, 0, 0],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {

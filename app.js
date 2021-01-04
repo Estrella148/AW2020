@@ -108,6 +108,9 @@ app.get("/infoPregunta/:id", controlAcceso, controllerU.controlAccesoDatosUsuari
 //Formular respuesta
 app.post("/infoPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.formularRespuesta);
 
+//Votos
+app.post("/votosPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotos);
+
 
 //Desconectar
 app.get("/cerrarSesion", controlAcceso, function (request, response, next) {
