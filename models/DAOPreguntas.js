@@ -147,7 +147,7 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta",
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta JOIN respuestas ON preguntas.idPregunta<>respuestas.idPregunta",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
                         if (err) {
