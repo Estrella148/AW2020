@@ -78,20 +78,22 @@
 
         <div class="contenedorRespuestas">
             <%r.forEach(function(respuesta){%>
-                <div class="respuestas">
+                <div class="respuestas" >
                     <div class="votos">
+                    <form  method="POST" action="/votosRespuesta">
                         <div class="contadorVoto">
                             <h3>
                                 <%=respuesta.contVotos%> votos
                             </h3>
                         </div>
                         <div class="voto">
-                            <button class="imgVotoP" type="submit" name=positivo value=10
-                                alt="contadorPositivos"></button>
-                            <button class="imgVotoN" type="submit" name=negativo value=-2
-                                alt="contadorNegativos"></button>
+                            <input type="hidden" name="IdRespuesta" value=<%=respuesta.idRespuesta%>>
+                            <input type="hidden" name="idP" value=<%=respuesta.idPregunta%>>
+                            <button class="imgVotoP" type="submit" name=positivo value=10 alt="contadorPositivos"></button>
+                            <button class="imgVotoN" type="submit" name=negativo value=-2 alt="contadorNegativos"></button>
                         </div>
-                    </div>
+                    </form>
+                    </div>  
                     <div class="info">
                         <h3>
                             <%=respuesta.cuerpo%>

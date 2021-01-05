@@ -267,7 +267,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT votoPregunta FROM votosPregunta WHERE idUsuario=? AND idPregunta=?", [idU, idP],
+                connection.query("SELECT votoPregunta FROM votospregunta WHERE idUsuario=? AND idPregunta=?", [idU, idP],
                     function (err, rows) {
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
@@ -275,7 +275,7 @@ class DAOPreguntas {
                         else {
                             if (rows[0].votoPregunta === 0) {//si no ha votado
                                 //actualizar a que ha votado el usuario esa pregunta
-                                connection.query("UPDATE votosPregunta SET votoPregunta=1 WHERE idUsuario=? AND idPregunta=?", [idU, idP],
+                                connection.query("UPDATE votospregunta SET votoPregunta=1 WHERE idUsuario=? AND idPregunta=?", [idU, idP],
                                     function (err, rows) {
                                         connection.release();
                                         if (err) {
@@ -284,6 +284,48 @@ class DAOPreguntas {
                                         else {//actualiza tabla según sea un voto positivo o negativo
                                             connection.query("UPDATE preguntas SET contVotos=contVotos+1 WHERE preguntas.idPregunta=?", [idP],
                                                 function (err, rows) {
+                                                    if (err) {
+                                                        callback(new Error("Error de acceso a la Base de datos"));
+                                                    }
+                                                    else {
+                                                        callback(null, "true")
+                                                    }
+                                                });
+                                        }
+                                    });
+                            } else {
+                                callback(null, "false")
+                            }
+
+                        }
+                    });
+            }
+        });
+    }
+
+    contVotosRespuesta(idU, idRespuesta, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT votoRespuesta FROM votosrespuesta WHERE idUsuario=? AND idRespuesta=?", [idU, idRespuesta],
+                    function (err, rows) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            if (rows[0] == undefined || rows[0].votoRespuesta != 1) {//si no ha votado
+                                //actualizar a que ha votado el usuario esa pregunta
+                                connection.query("INSERT INTO votosrespuesta (idUsuario, idRespuesta, votoRespuesta) VALUES (?,?,1)", [idU, idRespuesta],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de Acceso a la Base de datos"));
+                                        }
+                                        else {//actualiza tabla según sea un voto positivo o negativo
+                                            connection.query("UPDATE respuestas SET contVotos=contVotos+1 WHERE respuestas.idRespuesta=?", [idRespuesta],    
+                                            function (err, rows) {
+                                                connection.release();
                                                     if (err) {
                                                         callback(new Error("Error de acceso a la Base de datos"));
                                                     }
@@ -322,7 +364,7 @@ class DAOPreguntas {
                                         callback(new Error("Error de acceso a la base de datos"));
                                     }
                                     else {
-                                        let total = rows[0].reputacion + boton;
+                                        let total = rows[0].reputacion + parseInt(boton);
                                         if (total < 1) { total = 1; }
                                         connection.query("UPDATE usuarios SET reputacion=? WHERE id = ?", [total, idU],
                                             function (err, rows) {
@@ -341,6 +383,86 @@ class DAOPreguntas {
             }
         }
         );
+    }
+
+    reputacionRespuesta(id, boton, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT idUsuario FROM respuestas WHERE respuestas.idRespuesta = ?", [id],
+                    function (err, rows) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            let idU = rows[0].idUsuario;
+                            connection.query("SELECT reputacion FROM usuarios WHERE id = ?", [idU],
+                                function (err, rows) {
+                                    if (err) {
+                                        callback(new Error("Error de acceso a la base de datos"));
+                                    }
+                                    else {
+                                        let total = rows[0].reputacion + parseInt(boton);
+                                        if (total < 1) { total = 1; }
+                                        connection.query("UPDATE usuarios SET reputacion=? WHERE id = ?", [total, idU],
+                                            function (err, rows) {
+                                                connection.release(); // devolver al pool la conexión
+                                                if (err) {
+                                                    callback(new Error("Error de acceso a la base de datos"));
+                                                }
+                                                else {
+                                                    callback(null)
+                                                }
+                                            });
+                                    }
+                                });
+                        }
+                    });
+            }
+        }
+        );
+    }
+
+    puntos(idP, punto, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("UPDATE preguntas SET puntosPregunta=puntosPregunta+? WHERE idPregunta=?", [punto, idP],
+                    function (err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+                    });
+            }
+        });
+    }
+
+    puntosRespuesta(idR, punto, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("UPDATE respuestas SET puntosRespuesta=puntosRespuesta+? WHERE idRespuesta=?", [punto, idR],
+                    function (err, rows) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+                    });
+            }
+        });
     }
 
     //Obtener una pregunta y usuario que la ha preguntado
@@ -393,6 +515,7 @@ class DAOPreguntas {
         });
     }
 
+
     mostrarRespuestasporPregunta(idPregunta, callback) {
 
         this.pool.getConnection(function (err, connection) {
@@ -400,7 +523,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT respuestas.cuerpo, respuestas.contVotos, respuestas.fecha, usuarios.nombre, usuarios.imagen\
+                connection.query("SELECT respuestas.idRespuesta, respuestas.idPregunta,respuestas.cuerpo, respuestas.contVotos, respuestas.fecha, usuarios.nombre, usuarios.imagen\
                 FROM respuestas JOIN usuarios ON respuestas.idUsuario = usuarios.id WHERE respuestas.idPregunta = ?", [idPregunta],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión

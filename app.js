@@ -110,6 +110,7 @@ app.post("/infoPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, c
 
 //Votos
 app.post("/votosPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotos);
+app.post("/votosRespuesta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotosRespuesta);
 
 
 //Desconectar
