@@ -115,14 +115,26 @@ function infoP(request, response, next) {
                     next(err);
                 }
                 else {
-                    daoP.visitaPregunta(request.params.id, response.locals.usuario.id, function (err) {
+                    daoP.visitaPregunta(request.params.id, response.locals.usuario.id, function (err, visitado) {
                         if (err) {
                             next(err);
                         }
                         else {
+                            if (visitado === "true") {
+                                response.status(200);
+                                response.render("infoPregunta", { p: p, etiquetas: etiquetas, r: r });
+                            } else {
+                                daoP.actualizarMedallasPreguntasVisitadas(request.params.id, function (err) {
+                                    if (err) {
+                                        next(err);
+                                    }
+                                    else {
+                                        response.status(200);
+                                        response.render("infoPregunta", { p: p, etiquetas: etiquetas, r: r });
+                                    }
+                                })
+                            }
 
-                            response.status(200);
-                            response.render("infoPregunta", { p: p, etiquetas: etiquetas, r: r });
                         }
 
                     })
@@ -171,7 +183,14 @@ function actualizarVotos(request, response, next) {
                                 next(err);
                             }
                             else {
-                                response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                                daoP.actualizarMedallasPuntosPreguntas(request.body.IdPregunta, function (err) {
+                                    if (err) {
+                                        next(err);
+                                    }
+                                    else {
+                                        response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                                    }
+                                });
                             }
                         });
                     }
@@ -216,7 +235,14 @@ function actualizarVotosRespuesta(request, response, next) {
                                 next(err);
                             }
                             else {
-                                response.redirect("/infoPregunta/" + request.body.idP);
+                                daoP.actualizarMedallasPuntosRespuestas(request.body.IdRespuesta, function (err) {
+                                    if (err) {
+                                        next(err);
+                                    }
+                                    else {
+                                        response.redirect("/infoPregunta/" + request.body.idP);
+                                    }
+                                });
                             }
                         });
                     }

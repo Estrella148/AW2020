@@ -323,9 +323,9 @@ class DAOPreguntas {
                                             callback(new Error("Error de Acceso a la Base de datos"));
                                         }
                                         else {//actualiza tabla según sea un voto positivo o negativo
-                                            connection.query("UPDATE respuestas SET contVotos=contVotos+1 WHERE respuestas.idRespuesta=?", [idRespuesta],    
-                                            function (err, rows) {
-                                                connection.release();
+                                            connection.query("UPDATE respuestas SET contVotos=contVotos+1 WHERE respuestas.idRespuesta=?", [idRespuesta],
+                                                function (err, rows) {
+                                                    connection.release();
                                                     if (err) {
                                                         callback(new Error("Error de acceso a la Base de datos"));
                                                     }
@@ -465,6 +465,413 @@ class DAOPreguntas {
         });
     }
 
+    actualizarMedallasPuntosPreguntas(idP, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT idUsuario, puntosPregunta FROM preguntas WHERE idPregunta=?", [idP],
+                    function (err, rows) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            let usuario = rows[0].idUsuario;
+                            if (rows[0].puntosPregunta == 1) {
+                                let nombre = "Estudiante";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallabronce WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else if (rows[0].puntosPregunta == 2) {
+                                let nombre = "Pregunta interesante";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallabronce WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else if (rows[0].puntosPregunta == 4) {
+                                let nombre = "Buena pregunta";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallaplata WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallaplata (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else if (rows[0].puntosPregunta == 6) {
+                                let nombre = "Excelente pregunta";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallaoro WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallaoro (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else {
+                                callback(null);
+                            }
+                        }
+                    });
+            }
+        });
+    }
+
+    actualizarMedallasPuntosRespuestas(idR, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT idUsuario, puntosRespuesta FROM respuestas WHERE idRespuesta=?", [idR],
+                    function (err, rows) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos primero"));
+                        }
+                        else {
+                            let usuario = rows[0].idUsuario;
+                            if (rows[0].puntosRespuesta == 2) {
+                                let nombre = "Respuesta interesante";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallabronce WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos fallo al seleccionar"));
+                                        }
+                                        else {
+                                            console.log(rows[0]);
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos insertar medalla bronce"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos actualizar medalla bron"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else if (rows[0].puntosRespuesta == 4) {
+                                let nombre = "Buena respuesta";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallaplata WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallaplata (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else if (rows[0].puntosRespuesta == 6) {
+                                let nombre = "Excelente respuesta";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallaoro WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallaoro (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else {
+                                callback(null);
+                            }
+                        }
+                    });
+            }
+        });
+    }
+
+    actualizarMedallasPreguntasVisitadas(idP, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT idUsuario, contVisitas FROM preguntas WHERE idPregunta=?", [idP],
+                    function (err, rows) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            let usuario = rows[0].idUsuario;
+                            if (rows[0].contVisitas == 2) {
+                                let nombre = "Pregunta popular";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallabronce WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else if (rows[0].contVisitas == 4) {
+                                let nombre = "Pregunta destacada";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallaplata WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallaplata (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else if (rows[0].contVisitas == 6) {
+                                let nombre = "Pregunta famosa";
+                                connection.query("SELECT idUsuario, nombre, cantidad FROM medallaoro WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                    function (err, rows) {
+                                        if (err) {
+                                            callback(new Error("Error de acceso a la base de datos"));
+                                        }
+                                        else {
+                                            if (rows[0] == undefined) {
+                                                connection.query("INSERT INTO medallaoro (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+                                                    });
+                                            } else {
+                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
+                                                    function (err, rows) {
+                                                        connection.release();
+                                                        if (err) {
+                                                            callback(new Error("Error de acceso a la base de datos"));
+                                                        }
+                                                        else {
+                                                            callback(null);
+                                                        }
+
+                                                    });
+                                            }
+                                        }
+                                    });
+                            } else {
+                                callback(null);
+                            }
+                        }
+                    });
+            }
+        });
+    }
+
     //Obtener una pregunta y usuario que la ha preguntado
     getPregunta(id, callback) {
         this.pool.getConnection(function (err, connection) {
@@ -571,13 +978,14 @@ class DAOPreguntas {
                                                         callback(new Error("Error de acceso a la Base de datos"));
                                                     }
                                                     else {
-                                                        callback(null)
+                                                        callback(null,"false")
                                                     }
                                                 });
                                         }
                                     });
-                            }
-                            callback(null)
+                            }else{
+                                callback(null,"true")
+                            }  
                         }
                     })
             }
