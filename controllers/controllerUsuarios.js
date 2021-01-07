@@ -184,6 +184,18 @@ function datosUsuario(request, response, next) {
     })
 }
 
+function filtroUsuario(request, response, next) {
+    daoU.mostrarUsuariosText(request.body.buscadorUsuario, function (err, usersList) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("filtrarUsuario", { usersList: usersList});
+        }
+    })
+}
+
 module.exports = {
     crearCuenta: crearCuenta,
     logearse: logearse,
@@ -191,6 +203,7 @@ module.exports = {
     imagenPerfil: imagenPerfil,
     buscarUsuario: buscarUsuario,
     controlAccesoDatosUsuario: controlAccesoDatosUsuario,
-    datosUsuario: datosUsuario
+    datosUsuario: datosUsuario,
+    filtroUsuario:filtroUsuario
 };
 

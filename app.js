@@ -109,6 +109,8 @@ app.post("/infoPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, c
 app.post("/votosPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotos);
 app.post("/votosRespuesta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotosRespuesta);
 
+//Filtro Usuarios
+app.post("/filtrarUsuario", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasText, controllerU.filtroUsuario);
 
 //Desconectar
 app.get("/cerrarSesion", controlAcceso, function (request, response, next) {

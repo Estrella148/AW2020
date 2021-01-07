@@ -170,12 +170,12 @@ class DAOUsuarios {
                         }
                         else {
                             if (rows === undefined) {
-                                callback(null,[],0);
+                                callback(null, [], 0);
                             }
                             else {
                                 let cantidad = 0;
-                                rows.forEach(e =>{
-                                    cantidad+=e.cantidad;
+                                rows.forEach(e => {
+                                    cantidad += e.cantidad;
                                 });
                                 console.log(cantidad);
                                 callback(null, rows, cantidad);
@@ -196,21 +196,21 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT nombre,cantidad FROM medallaplata WHERE idUsuario = ?", [idUsuario],
                     function (err, rows) {
-                        
+
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos para ver plata"));
                         }
                         else {
                             if (rows === undefined) {
-                                callback(null,[],0);
+                                callback(null, [], 0);
                             }
                             else {
                                 let cantidad = 0;
-                                rows.forEach(e =>{
-                                    cantidad+=e.cantidad;
+                                rows.forEach(e => {
+                                    cantidad += e.cantidad;
                                 });
                                 console.log(cantidad)
-                                callback(null, rows,cantidad);
+                                callback(null, rows, cantidad);
                             }
                         }
                     });
@@ -228,19 +228,19 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT nombre,cantidad FROM medallabronce WHERE idUsuario = ?", [idUsuario],
                     function (err, rows) {
-                        
+
                         connection.release(); // devolver al pool la conexión
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos para ver bronces"));
                         }
                         else {
                             if (rows === undefined) {
-                                callback(null,[],0);
+                                callback(null, [], 0);
                             }
                             else {
                                 let cantidad = 0;
-                                rows.forEach(e =>{
-                                    cantidad+=e.cantidad;
+                                rows.forEach(e => {
+                                    cantidad += e.cantidad;
                                 });
                                 console.log(cantidad);
                                 callback(null, rows, cantidad);
@@ -286,6 +286,31 @@ class DAOUsuarios {
             }
         });
     }
+
+    mostrarUsuariosText(filtro, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT usuarios.id, usuarios.nombre, usuarios.reputacion, usuarios.imagen FROM usuarios WHERE \
+                usuarios.nombre LIKE ?", ['%' + filtro + '%'],
+                    function (err, rows) {
+                        connection.release(); // devolver al pool la conexión
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, rows);
+                        }
+                    });
+            }
+        }
+        );
+    }
+
+
+
+
 }
 
 module.exports = DAOUsuarios;
