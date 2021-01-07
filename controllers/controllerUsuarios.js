@@ -28,7 +28,7 @@ const pool = mysql.createPool(config.mysqlConfig);
 // Crear instancia 
 const daoU = new DAOUsuarios(pool);
 
-function crearCuenta(request,response,next){
+function crearCuenta(request, response, next) {
     let imagen = img_aleatoria();
     let error = false;
     if (request.body.password1 === request.body.password2) {
@@ -80,7 +80,7 @@ function img_aleatoria() {
     return array[Math.floor(Math.random() * 3)];
 }
 
-function logearse(request, response, next){
+function logearse(request, response, next) {
     daoU.usuarioCorrecto(request.body.email, request.body.password, function (err, result) {
         if (err) {
             next(err);
@@ -97,7 +97,7 @@ function logearse(request, response, next){
     });
 }
 
-function paginaPrincipal(request, response, next){
+function paginaPrincipal(request, response, next) {
     daoU.getUsuario(request.session.currentUser, function (err, usuario) {
         if (err) {
             next(err);
@@ -109,7 +109,7 @@ function paginaPrincipal(request, response, next){
     });
 }
 
-function imagenPerfil(request, response, next){
+function imagenPerfil(request, response, next) {
     if (request.params.id) {
         response.sendFile(path.join(__dirname, "profile_imgs", request.params.id));
     }
@@ -124,7 +124,7 @@ function imagenPerfil(request, response, next){
 }
 
 
-function buscarUsuario(request, response, next){
+function buscarUsuario(request, response, next) {
     daoU.MostrarTodosUsuario(function (err, usersList) {
         if (err) {
             next(err);
@@ -150,28 +150,40 @@ function controlAccesoDatosUsuario(request, response, next) {
     })
 }
 
-module.exports= {
-    crearCuenta:crearCuenta,
-    logearse:logearse,
-    paginaPrincipal:paginaPrincipal,
-    imagenPerfil:imagenPerfil,
-    buscarUsuario:buscarUsuario,
-    controlAccesoDatosUsuario:controlAccesoDatosUsuario
+//Perfil usuario.
+function datosUsuario(request, response, next) {
+    console.log(request.params.id)
+    daoU.getPerfilUsuario(request.params.id, function (err, u) {
+    //daoU.getMedallaBronce(request.session.currentUser, function (errBronce, bronces) {
+        // daoU.getMedallaPlata(request.session.currentUser, function(errPlata, platas){
+        //     daoU.getMedallaOro(request.session.currentUser, function(errOro, oros){
+        //         if (errBronce || errPlata || errOro) {
+        //             next(err);
+        //         }
+        //         else {
+        //             response.status(200);
+        //             response.render("perfilUsuario", { bronces: bronces, platas: platas, oros: oros });
+        //         }
+        //     })
+        // })
+        if (err) {
+            next(err);
+        }
+        else {
+            console.log(u);
+            response.status(200);
+            response.render("perfilUsuario", { u: u});
+        }
+    })
+}
+
+module.exports = {
+    crearCuenta: crearCuenta,
+    logearse: logearse,
+    paginaPrincipal: paginaPrincipal,
+    imagenPerfil: imagenPerfil,
+    buscarUsuario: buscarUsuario,
+    controlAccesoDatosUsuario: controlAccesoDatosUsuario,
+    datosUsuario: datosUsuario
 };
 
-//Perfil usuario.
-/* app.get("/perfilUsuario", controlAcceso, controlAccesoDatosUsuario, function (request, response) {
-    daoU.getMedallaBronce(request.session.currentUser, function(errBronce, bronces){
-        daoU.getMedallaPlata(request.session.currentUser, function(errPlata, platas){
-            daoU.getMedallaOro(request.session.currentUser, function(errOro, oros){
-                if (errBronce || errPlata || errOro) {
-                    //next(err500(err, request, response));
-                }
-                else {
-                    response.status(200);
-                    response.render("perfilUsuario", { bronces: bronces, platas: platas, oros: oros });
-                }
-            })
-        })
-    })
-}); */

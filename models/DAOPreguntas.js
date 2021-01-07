@@ -12,7 +12,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, preguntas.idUsuario, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                 FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta",
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión
@@ -31,6 +31,7 @@ class DAOPreguntas {
                                         fecha: element.fecha,
                                         nombre: element.usuario,
                                         imagen: element.imagen,
+                                        idUsuario: element.idUsuario,
                                         tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
@@ -55,7 +56,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                connection.query("SELECT preguntas.idPregunta,preguntas.idUsuario, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                 FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE \
                 preguntas.titulo LIKE ? OR preguntas.cuerpo LIKE ? ", ['%' + filtro + '%', '%' + filtro + '%'],
                     function (err, rows) {
@@ -75,6 +76,7 @@ class DAOPreguntas {
                                         fecha: element.fecha,
                                         nombre: element.usuario,
                                         imagen: element.imagen,
+                                        idUsuario: element.idUsuario,
                                         tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
@@ -100,7 +102,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                connection.query("SELECT preguntas.idPregunta,preguntas.idUsuario, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                 FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE preguntas.idPregunta IN (\
                 SELECT preguntas.idPregunta FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE etiquetas.nombre=?)", [filtroEtiqueta],
                     function (err, rows) {
@@ -120,6 +122,7 @@ class DAOPreguntas {
                                         fecha: element.fecha,
                                         nombre: element.usuario,
                                         imagen: element.imagen,
+                                        idUsuario: element.idUsuario,
                                         tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
@@ -146,7 +149,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo,preguntas.idUsuario, preguntas.cuerpo, usuarios.nombre as usuario, preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
                  FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta\
                  WHERE preguntas.idPregunta NOT IN ( SELECT preguntas.idPregunta FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta \
                     JOIN respuestas WHERE respuestas.idPregunta=preguntas.idPregunta)",
@@ -167,6 +170,7 @@ class DAOPreguntas {
                                         fecha: element.fecha,
                                         nombre: element.usuario,
                                         imagen: element.imagen,
+                                        idUsuario: element.idUsuario,
                                         tags: [element.etiqueta]
                                     };
                                     array[object.idPregunta] = object;
@@ -644,7 +648,6 @@ class DAOPreguntas {
                                             callback(new Error("Error de acceso a la base de datos fallo al seleccionar"));
                                         }
                                         else {
-                                            console.log(rows[0]);
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
@@ -879,7 +882,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, preguntas.fecha, preguntas.contVisitas,preguntas.contVotos,\
+                connection.query("SELECT preguntas.idPregunta, preguntas.idUsuario, preguntas.titulo, preguntas.cuerpo, preguntas.fecha, preguntas.contVisitas,preguntas.contVotos,\
                 usuarios.nombre, usuarios.imagen, etiquetas.nombre as etiqueta FROM preguntas JOIN usuarios ON usuarios.id = preguntas.idUsuario JOIN etiquetas ON\
                 preguntas.idPregunta = etiquetas.idPregunta WHERE preguntas.idPregunta = ?", [id],
                     function (err, rows) {
@@ -930,7 +933,7 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT respuestas.idRespuesta, respuestas.idPregunta,respuestas.cuerpo, respuestas.contVotos, respuestas.fecha, usuarios.nombre, usuarios.imagen\
+                connection.query("SELECT respuestas.idRespuesta, respuestas.idPregunta,respuestas.cuerpo, respuestas.contVotos, respuestas.fecha, usuarios.id as idUsuario, usuarios.nombre, usuarios.imagen\
                 FROM respuestas JOIN usuarios ON respuestas.idUsuario = usuarios.id WHERE respuestas.idPregunta = ?", [idPregunta],
                     function (err, rows) {
                         connection.release(); // devolver al pool la conexión

@@ -67,10 +67,7 @@ app.get("/crearCuenta", function (request, response, next) {
 app.get("/paginaPrincipal", controlAcceso, controllerU.paginaPrincipal);
 
 //Perfil Usuario
-app.get("/perfilUsuario", controlAcceso, controllerU.controlAccesoDatosUsuario, function (request, response) {
-    response.status(200);
-    response.render("perfilUsuario");
-});
+app.get("/perfilUsuario/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.datosUsuario);
 
 //Insertar usuario
 app.post("/crearCuenta", multerFactory.single("img"), controllerU.crearCuenta);

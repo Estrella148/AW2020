@@ -85,7 +85,6 @@ class DAOUsuarios {
     //get Usuario.
     //Cambiado el parámetro id por el correo.
     getUsuario(correo, callback) {
-
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
@@ -105,26 +104,6 @@ class DAOUsuarios {
         );
     }
 
-    getUsuarioRespuestas(idRespuestas, callback) {
-
-        this.pool.getConnection(function (err, connection) {
-            if (err) {
-                callback(new Error("Error de conexión a la base de datos"));
-            }
-            else {
-                connection.query("SELECT (nombre, imagen) FROM usuarios JOIN respuestas WHERE id = ?", [idRespuestas],
-                    function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No existe el usuario"));
-                        } else {
-                            callback(null, rows[0]);
-                        }
-                    });
-            }
-        }
-        );
-    }
 
     /*Imagen de perfil de usuario: Obtienes el fichero de la imagen del usuario identificado por su email*/
     getUserImageName(email, callback) {
@@ -155,7 +134,26 @@ class DAOUsuarios {
 
     }
 
-    //Cambiar el parámetro id de las medallas por el correo???
+   getPerfilUsuario(idU,callback){
+    this.pool.getConnection(function (err, connection) {
+        if (err) {
+            callback(new Error("Error de conexión a la base de datos"));
+        }
+        else {
+            connection.query("SELECT * FROM usuarios WHERE id = ?", [idU],
+                function (err, rows) {
+                    connection.release();
+                    if (err) {
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else {
+                        callback(null, rows[0]);
+                    }
+                });
+        }
+    }
+    );
+   }
 
     getMedallaOro(idUsuario, callback) {
 
@@ -166,11 +164,12 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT * FROM usuarios JOIN medallaoro WHERE id = ?", [idUsuario],
                     function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No hay medallas de oro"));
-                        } else {
-                            callback(null, rows[0]);
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            connection.release();
+                            callback(null, rows);
                         }
                     });
             }
@@ -187,11 +186,12 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT * FROM usuarios JOIN medallaplata WHERE id = ?", [idUsuario],
                     function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No hay medallas de plata"));
-                        } else {
-                            callback(null, rows[0]);
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            connection.release(); // devolver al pool la conexión
+                            callback(null, rows);
                         }
                     });
             }
@@ -206,13 +206,15 @@ class DAOUsuarios {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("SELECT * FROM usuarios JOIN medallabronce WHERE id = ?", [idUsuario],
+                connection.query("SELECT nombre,cantidad FROM medallabronce WHERE idUsuario = ?", [idUsuario],
                     function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
-                        if (rows.length == 0) {//la consulta no ha devuelto resultados
-                            callback(new Error("No hay medallas de bronce"));
-                        } else {
-                            callback(null, rows[0]);
+                        console.log(rows);
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            connection.release(); // devolver al pool la conexión
+                            callback(null, rows);
                         }
                     });
             }

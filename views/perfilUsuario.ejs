@@ -15,13 +15,13 @@
     <div class= "contenedorEstadisticas">
         <div class="datosUsuario">
             <div class="imagenPerfil">
-                <img src="/imagenUsuario/<%=usuario.imagen%>">
+                <img src="/imagenUsuario/<%=u.imagen%>">
             </div>
             <div class="nombrePerfil">
-                <a class="estiloEnlace"><%=usuario.nombre%></a>
+                <a class="estiloEnlace"><%=u.nombre%></a>
             </div>
             <div class="fechaAlta">
-                <h3>Miembro desde <%=usuario.fecha.toDateString()%></h3>
+                <h3>Miembro desde <%=u.fecha.toDateString()%></h3>
             </div>
         </div>
         <!--grid-->
@@ -32,17 +32,17 @@
 
             <div class="reputacion">
                 <div>Reputación</div>
-                <div><%=usuario.reputacion%></div>
+                <div><%=u.reputacion%></div>
             </div>
 
             <div class="preguntas">
                 <div>Preguntas</div>
-                <div><%=usuario.contPreguntas%></div>
+                <div><%=u.contPreguntas%></div>
             </div>
 
             <div class="respuestas">
                 <div>Respuestas</div>
-                <div><%=usuario.contRespuestas%></div>
+                <div><%=u.contRespuestas%></div>
             </div>
         </div>
     </div>
@@ -56,17 +56,17 @@
 
         <div class="bronce">
             <div>BRONCE</div>
-            <div>5</div>
+            <div>0</div>
         </div>
 
         <div class="plata">
             <div>PLATA</div>
-            <div>3</div>
+            <div>0</div>
         </div>
 
         <div class="oro">
             <div>ORO</div>
-            <div>2</div>
+            <div>0</div>
         </div>
 
         <!--cada conjunto tendrá x logros-->

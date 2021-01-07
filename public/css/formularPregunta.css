@@ -88,6 +88,11 @@ a{
     color: white;
 }
 
+a:hover{
+    cursor: pointer;
+    color: orange;
+}
+
 .titulo2{
     justify-content: center;
     text-align: center;
