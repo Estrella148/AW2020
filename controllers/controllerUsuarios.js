@@ -152,27 +152,34 @@ function controlAccesoDatosUsuario(request, response, next) {
 
 //Perfil usuario.
 function datosUsuario(request, response, next) {
-    console.log(request.params.id)
     daoU.getPerfilUsuario(request.params.id, function (err, u) {
-    //daoU.getMedallaBronce(request.session.currentUser, function (errBronce, bronces) {
-        // daoU.getMedallaPlata(request.session.currentUser, function(errPlata, platas){
-        //     daoU.getMedallaOro(request.session.currentUser, function(errOro, oros){
-        //         if (errBronce || errPlata || errOro) {
-        //             next(err);
-        //         }
-        //         else {
-        //             response.status(200);
-        //             response.render("perfilUsuario", { bronces: bronces, platas: platas, oros: oros });
-        //         }
-        //     })
-        // })
         if (err) {
             next(err);
         }
         else {
-            console.log(u);
-            response.status(200);
-            response.render("perfilUsuario", { u: u});
+            daoU.getMedallaOro(request.params.id, function (err, oros, cantidadO) {
+                if (err) {
+                    next(err);
+                }
+                else {
+                    daoU.getMedallaPlata(request.params.id, function (err, platas, cantidadP) {
+                        if (err) {
+                            next(err);
+                        }
+                        else {
+                            daoU.getMedallaBronce(request.params.id, function (err, bronces, cantidadB) {
+                                if (err) {
+                                    next(err);
+                                }
+                                else {
+                                    response.status(200);
+                                    response.render("perfilUsuario", { u: u, bronces: bronces, cantidadB: cantidadB, platas: platas, cantidadP: cantidadP, oros: oros, cantidadO: cantidadO });
+                                }
+                            })
+                        }
+                    })
+                }
+            })
         }
     })
 }

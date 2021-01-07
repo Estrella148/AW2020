@@ -56,53 +56,53 @@
 
         <div class="bronce">
             <div>BRONCE</div>
-            <div>0</div>
+            <div><%=cantidadB%></div>
         </div>
 
         <div class="plata">
             <div>PLATA</div>
-            <div>0</div>
+            <div><%=cantidadP%></div>
         </div>
 
         <div class="oro">
             <div>ORO</div>
-            <div>0</div>
+            <div><%=cantidadO%></div>
         </div>
 
         <!--cada conjunto tendrá x logros-->
         <div class="conj">
+            <%bronces.forEach(function(b){%>
             <div class= logros>
-                <div class="logro">Pregunta tacatá</div>
-                <div class="multi">x2</div>
+                <div class="logro"><%=b.nombre%></div>
+                <%if(b.cantidad>1){ %>
+                    <div class="multi">x <%=b.cantidad%></div>
+                <%}%>
             </div>
+            <%})%>
         </div>
-
+       
         <div class="conj">
+            <%platas.forEach(function(p){%>
             <div class= logros>
-                <div class="logro">Pregunta plata</div>
-                <div class="multi">x2</div>
+                <div class="logro"><%=p.nombre%></div>
+                <%if(p.cantidad>1){ %>
+                    <div class="multi">x <%=p.cantidad%></div>
+                <%}%>
             </div>
-            <div class= logros>
-                <div class="logro">Pregunta plata</div>
-                <div class="multi">x2</div>
-            </div>
+            <%})%>
         </div>
-
+        
+        
         <div class="conj">
+            <%oros.forEach(function(o){%>
             <div class= logros>
-                <div class="logro">Pregunta oro</div>
-                <div class="multi">x2</div>
+                <div class="logro"><%=o.nombre%></div>
+                <%if(o.cantidad>1){ %>
+                    <div class="multi">x <%=o.cantidad%></div>
+                <%}%>
             </div>
-            <div class= logros>
-                <div class="logro">Pregunta oro</div>
-                <div class="multi">x2</div>
-            </div>
-            <div class= logros>
-                <div class="logro">Pregunta oro</div>
-                <div class="multi">x2</div>
-            </div>
+            <%})%>
         </div>
-
 
     </div>
 
