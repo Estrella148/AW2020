@@ -1,5 +1,6 @@
 "use strict";
 
+
 //Middleware control de acceso
 function controlAcceso(request, response, next) {
     if (request.session.currentUser != undefined) {

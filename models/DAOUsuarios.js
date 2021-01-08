@@ -177,7 +177,6 @@ class DAOUsuarios {
                                 rows.forEach(e => {
                                     cantidad += e.cantidad;
                                 });
-                                console.log(cantidad);
                                 callback(null, rows, cantidad);
                             }
                         }
@@ -209,7 +208,6 @@ class DAOUsuarios {
                                 rows.forEach(e => {
                                     cantidad += e.cantidad;
                                 });
-                                console.log(cantidad)
                                 callback(null, rows, cantidad);
                             }
                         }
@@ -242,7 +240,6 @@ class DAOUsuarios {
                                 rows.forEach(e => {
                                     cantidad += e.cantidad;
                                 });
-                                console.log(cantidad);
                                 callback(null, rows, cantidad);
                             }
                         }
