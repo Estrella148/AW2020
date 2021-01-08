@@ -3,6 +3,8 @@ const config = require("./config");
 
 const controllerU = require("./controllers/controllerUsuarios");
 const controllerP = require("./controllers/controllerPreguntas");
+const middlewares = require("./middleware/middlewares");
+const middlewareError = require("./middleware/middlewareError");
 const path = require("path");
 const mysql = require("mysql");
 const express = require("express");
@@ -64,25 +66,25 @@ app.get("/crearCuenta", function (request, response, next) {
 });
 
 //Pagina principal
-app.get("/paginaPrincipal", controlAcceso, controllerU.paginaPrincipal);
+app.get("/paginaPrincipal", middlewares.controlAcceso, controllerU.paginaPrincipal);
 
 //Perfil Usuario
-app.get("/perfilUsuario/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.datosUsuario);
+app.get("/perfilUsuario/:id", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.datosUsuario);
 
 //Insertar usuario
 app.post("/crearCuenta", multerFactory.single("img"), controllerU.crearCuenta);
 
 //Imagenes de Perfil
-app.get("/imagenUsuario/:id?", controlAcceso, controllerU.imagenPerfil);
+app.get("/imagenUsuario/:id?", middlewares.controlAcceso, controllerU.imagenPerfil);
 
 //Buscar Usuario
-app.get("/busquedaUsuario", controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.buscarUsuario);
+app.get("/busquedaUsuario", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.buscarUsuario);
 
 //Mostrar todas las preguntas
-app.get("/preguntas", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntas, controllerP.mostrarTodas);
+app.get("/preguntas", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, middlewares.cAPreguntas, controllerP.mostrarTodas);
    
 //Formular Pregunta
-app.get("/formularPregunta", controlAcceso, controllerU.controlAccesoDatosUsuario, function (request, response, next) {
+app.get("/formularPregunta", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, function (request, response, next) {
     response.status(200);
     response.render("formularPregunta", { errorMsg: null });
 });
@@ -90,82 +92,46 @@ app.get("/formularPregunta", controlAcceso, controllerU.controlAccesoDatosUsuari
 app.post("/formularPregunta", controllerU.controlAccesoDatosUsuario,controllerP.formularPregunta);
 
 //Filtrar por texto
-app.post("/preguntasText", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasText, controllerP.filtroTexto);
+app.post("/preguntasText", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, middlewares.cAPreguntasText, controllerP.filtroTexto);
 
 //Filtrar por etiqueta
-app.get("/preguntasEtiqueta/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasEtiqueta,controllerP.filtroEtiqueta);
-app.post("/preguntasEtiqueta/preguntasText", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasText,controllerP.filtroTexto);
+app.get("/preguntasEtiqueta/:id", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, middlewares.cAPreguntasEtiqueta,controllerP.filtroEtiqueta);
+app.post("/preguntasEtiqueta/preguntasText", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, middlewares.cAPreguntasText,controllerP.filtroTexto);
 
 //Preguntas sin responder
-app.get("/preguntasSinResponder", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasSinResponder, controllerP.mostrarPreguntasSinResponder);
+app.get("/preguntasSinResponder", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, middlewares.cAPreguntasSinResponder, controllerP.mostrarPreguntasSinResponder);
 
 //Info Pregunta
-app.get("/infoPregunta/:id", controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.infoP);
+app.get("/infoPregunta/:id", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.infoP);
 
 //Formular respuesta
-app.post("/infoPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.formularRespuesta);
+app.post("/infoPregunta",middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.formularRespuesta);
 
 //Votos
-app.post("/votosPregunta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotos);
-app.post("/votosRespuesta",controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotosRespuesta);
+app.post("/votosPregunta",middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotos);
+app.post("/votosRespuesta",middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerP.actualizarVotosRespuesta);
 
 //Filtro Usuarios
-app.post("/filtrarUsuario", controlAcceso, controllerU.controlAccesoDatosUsuario, cAPreguntasText, controllerU.filtroUsuario);
+app.post("/filtrarUsuario", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, middlewares.cAPreguntasText, controllerU.filtroUsuario);
 
 //Desconectar
-app.get("/cerrarSesion", controlAcceso, function (request, response, next) {
+app.get("/cerrarSesion", middlewares.controlAcceso, function (request, response, next) {
     request.session.destroy();
     response.redirect("/paginaInicial");
 })
 
-//Middleware control de acceso
-function controlAcceso(request, response, next) {
-    if (request.session.currentUser != undefined) {
-        response.locals.userEmail = request.session.currentUser;
-        next();
-    }
-    else {
-        response.redirect("/paginaInicial");
-    }
-}
 
-
-function cAPreguntas(request, response, next) {
-    response.locals.msg = "Todas las preguntas";
-    next();
-}
-
-function cAPreguntasSinResponder(request, response, next) {
-    response.locals.msg = "Preguntas sin responder";
-    next();
-}
-
-function cAPreguntasText(request, response, next) {
-    response.locals.msg = "Resultados de la búsqueda ''" + request.body.buscador+ "''";
-    next();
-}
-
-
-function cAPreguntasEtiqueta(request, response, next) {
-    response.locals.msg = "Preguntas con la etiqueta ["+request.params.id+"]";
-    next();
-}
 
 //Manejadores de ruta para errores
-app.use(err404);
-app.use(err500);
+app.use(middlewareError.err404);
+app.use(middlewareError.err500);
 
-function err404(request, response) {
-    response.status(404);
-    response.render("error404", { url: request.url });
-}
+app.use(middlewares.controlAcceso);
+app.use(middlewares.cAPreguntas);
+app.use(middlewares.cAPreguntasSinResponder);
+app.use(middlewares.cAPreguntasText);
+app.use(middlewares.cAPreguntasEtiqueta);
 
-function err500(error, request, response, next) {
-    response.status(500);
-    response.render("error500", {
-        mensaje: error.message
-    });
-}
 
 // Arrancar el servidor
 app.listen(config.port, function (err) {
