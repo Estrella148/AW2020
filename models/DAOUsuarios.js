@@ -252,7 +252,6 @@ class DAOUsuarios {
     // Mostrar todos los usuarios. Guardamos en un array objetos en los que
     // cada uno de ellos contiene el id, nombre y reputacion de un usuario.
     MostrarTodosUsuario(callback) {
-
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
@@ -260,24 +259,80 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT id, nombre, reputacion, imagen FROM usuarios",
                     function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
                         if (rows.length == 0) {//la consulta no ha devuelto resultados
                             callback(new Error("No existe ningún usuario"));
                         } else {
                             let array = new Array();    //Array de usuarios
                             let object = new Object();
+                            let iterador = 0;
                             rows.forEach(element => {
-                                if (array[element.id] === undefined) {
+                                if (array[iterador] === undefined) {
                                     object = {
                                         id: element.id,
                                         nombre: element.nombre,
                                         reputacion: element.reputacion,
                                         imagen: element.imagen
                                     };
-                                    array[object.id] = object;
+                                    array[iterador] = object;
+                                    iterador++;
                                 }
                             });
+
                             callback(null, array);//devuelve el array
+                        }
+                    });
+            }
+        });
+    }
+
+    etiquetamax(callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                let etiquetaList=new Array();
+                connection.query("SELECT etiquetas.nombre, usuarios.id FROM usuarios JOIN preguntas ON usuarios.id = preguntas.idUsuario JOIN etiquetas ON etiquetas.idPregunta = preguntas.idPregunta\
+                ORDER BY usuarios.id, etiquetas.nombre",
+                    function (err, rows) {
+                        connection.release(); // devolver al pool la conexión
+                        if (err) {
+                            callback(err);
+                        } else {
+                            let cont = 0; let max = 0;
+                            let etiquetaMax = null;
+                            if (rows[0].nombre != null || rows[0] != undefined) {
+                                let etiqueta = rows[0].nombre;
+                                let id = rows[0].id;
+                                rows.forEach(e => {
+                                    if (e.id == id) {
+                                        if (e.nombre === etiqueta) {
+                                            cont++;
+                                            if (cont > max) {
+                                                max = cont;
+                                                etiquetaMax = etiqueta;
+                                            } else if (cont === max) {
+                                                etiquetaMax = null;
+                                            }
+                                        } else {
+                                            etiqueta = e.nombre;
+                                            cont = 1;
+                                            if (cont === max) {
+                                                etiquetaMax = null;
+                                            }
+                                            
+                                        }
+                                    } else {
+                                        etiquetaList.push({ id, etiquetaMax });
+                                        id = e.id;
+                                        cont = 1;
+                                        etiqueta = e.nombre;
+                                        etiquetaMax = etiqueta;
+                                    }
+                                });
+                                etiquetaList.push({ id, etiquetaMax });
+                            }
+                            callback(null, etiquetaList);
                         }
                     });
             }

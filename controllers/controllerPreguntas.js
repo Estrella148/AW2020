@@ -1,4 +1,5 @@
 "use strict";
+const utils=require("../utils");
 const DAOPreguntas = require("../models/DAOPreguntas");
 const config = require("../config");
 const mysql = require("mysql");
@@ -136,7 +137,7 @@ function formularRespuesta(request, response, next) {
                     next(err);
                 }
                 else {
-                    response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                    response.redirect("/preguntas");
                 }
             });
         }

@@ -34,9 +34,13 @@
                 <div class="reputacion">
                     <h3><%=user.reputacion%></h3>
                 </div>
-                <div class="tags">
-                    <a class="tag">Tais</a>
-                </div>
+                <%listaEtiquetas.forEach(function(e){%>
+                    <%if(e.id==user.id && e.etiquetaMax != null){ %>   
+                    <div class="tags">
+                        <a class="tag" href="/preguntasEtiqueta/<%=e.etiquetaMax%>"><%=e.etiquetaMax%></a>
+                    </div>
+                    <%}%>
+                <%})%>
             </div>
         <%})%>
     </div>

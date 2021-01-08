@@ -110,8 +110,17 @@ function buscarUsuario(request, response, next) {
             next(err);
         }
         else {
-            response.status(200);
-            response.render("busquedaUsuario", { usersList: usersList });
+            daoU.etiquetamax( function (err, listaEtiquetas) {
+                if (err) {
+                    next(err);
+                }
+                else {
+                    response.status(200);
+                    response.render("busquedaUsuario", { usersList: usersList, listaEtiquetas: listaEtiquetas});
+                }
+            })
+
+
         }
     })
 }
@@ -157,7 +166,7 @@ function filtroUsuario(request, response, next) {
         }
         else {
             response.status(200);
-            response.render("filtrarUsuario", { usersList: usersList});
+            response.render("filtrarUsuario", { usersList: usersList });
         }
     })
 }
@@ -182,7 +191,7 @@ module.exports = {
     imagenPerfil: imagenPerfil,
     buscarUsuario: buscarUsuario,
     datosUsuario: datosUsuario,
-    filtroUsuario:filtroUsuario,
-    controlAccesoDatosUsuario:controlAccesoDatosUsuario
+    filtroUsuario: filtroUsuario,
+    controlAccesoDatosUsuario: controlAccesoDatosUsuario
 };
 
