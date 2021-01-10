@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="..\css\infoPregunta.css">
+    <link rel="stylesheet" href="\css\infoPregunta.css">
     <link rel="icon" type="img/png" href="">
     <title>Info Pregunta</title>
 </head>
@@ -26,7 +26,7 @@
                 </h3>
             </div>
             <div class="votos">
-                <form method="POST" action="/votosPregunta">
+                <form method="POST" action="/pregunta/votosPregunta">
                     <div class="contadorVoto">
                         <h3>
                             <%=p.contVotos%> votos
@@ -47,7 +47,7 @@
             <div class="tags">
                 <%etiquetas.forEach(function(e){%>
                     <%if(e !="null" ){ %>
-                        <div class=tag><a href="/preguntasEtiqueta/<%=e%>">
+                        <div class=tag><a href="/pregunta/preguntasEtiqueta/<%=e%>">
                                 <%=e%>
                             </a></div>
                         <%}%>
@@ -59,10 +59,10 @@
                     </h4>
                 </div>
                 <div class="imagen">
-                    <img src="/imagenUsuario/<%=p.imagen%>">
+                    <img src="/usuario/imagenUsuario/<%=p.imagen%>">
                 </div>
                 <div class="nombre">
-                    <a href="/perfilUsuario/<%=p.idUsuario%>">
+                    <a href="/usuario/perfilUsuario/<%=p.idUsuario%>">
                         <%=p.nombre%>
                     </a>
                 </div>
@@ -80,7 +80,7 @@
             <%r.forEach(function(respuesta){%>
                 <div class="respuestas" >
                     <div class="votos">
-                    <form  method="POST" action="/votosRespuesta">
+                    <form  method="POST" action="/pregunta/votosRespuesta">
                         <div class="contadorVoto">
                             <h3>
                                 <%=respuesta.contVotos%> votos
@@ -105,10 +105,10 @@
                             </h4>
                         </div>
                         <div class="imagen">
-                            <img src="/imagenUsuario/<%=respuesta.imagen%>">
+                            <img src="/usuario/imagenUsuario/<%=respuesta.imagen%>">
                         </div>
                         <div class="nombre">
-                            <a href="/perfilUsuario/<%=respuesta.idUsuario%>">
+                            <a href="/usuario/perfilUsuario/<%=respuesta.idUsuario%>">
                                 <%=respuesta.nombre%>
                             </a>
                         </div>
@@ -118,7 +118,7 @@
         </div>
         <!--Fin contenedorRespuestas-->
 
-        <form method="POST" action="/infoPregunta">
+        <form method="POST" action="/pregunta/infoPregunta">
             <div class="tuRespuesta">
                 <div class="respuesta">
                     <h2 class="h2estilo">Tu respuesta</h2>

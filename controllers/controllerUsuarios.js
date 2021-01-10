@@ -3,6 +3,8 @@ const DAOUsuarios = require("../models/DAOUsuarios");
 const config = require("../config");
 const path = require("path");
 const mysql = require("mysql");
+// const pool = require("../pool");
+// let daoUsuario = new DAOUsuarios(pool.obtenerPool());
 // Crear un pool de conexiones a la base de datos de MySQL
 const pool = mysql.createPool(config.mysqlConfig);
 // Crear instancia 
@@ -55,6 +57,16 @@ function crearCuenta(request, response, next) {
     }
 }
 
+function getCrearCuenta(request, response, next) {
+    if (request.session.currentUser) {
+        response.redirect("/usuario/paginaPrincipal");
+    } else {
+        response.status(200);
+
+        response.render("crearCuenta", { errorMsg: null });
+    }
+}
+
 function img_aleatoria() {
     let array = ["estandar1.jpg", "estandar2.png", "estandar3.jpg"];
     return array[Math.floor(Math.random() * 3)];
@@ -68,7 +80,7 @@ function logearse(request, response, next) {
         else {
             if (result) {
                 request.session.currentUser = request.body.email;
-                response.redirect("/paginaPrincipal");
+                response.redirect("/usuario/paginaPrincipal");
             }
             else {
                 response.render("paginaInicial", { errorMsg: "Dirección de correo y/o contraseña no válidos" });
@@ -103,6 +115,10 @@ function imagenPerfil(request, response, next) {
     });
 }
 
+function cerrarSesion(request, response, next) {
+    request.session.destroy();
+    response.redirect("/paginaInicial");
+}
 
 function buscarUsuario(request, response, next) {
     daoU.MostrarTodosUsuario(function (err, usersList) {
@@ -165,8 +181,15 @@ function filtroUsuario(request, response, next) {
             next(err);
         }
         else {
-            response.status(200);
-            response.render("filtrarUsuario", { usersList: usersList });
+            daoU.etiquetamax( function (err, listaEtiquetas) {
+                if (err) {
+                    next(err);
+                }
+                else {
+                    response.status(200);
+                    response.render("filtrarUsuario", { usersList: usersList, listaEtiquetas: listaEtiquetas});
+                }
+            })
         }
     })
 }
@@ -186,9 +209,11 @@ function controlAccesoDatosUsuario(request, response, next) {
 
 module.exports = {
     crearCuenta: crearCuenta,
+    getCrearCuenta:getCrearCuenta,
     logearse: logearse,
     paginaPrincipal: paginaPrincipal,
     imagenPerfil: imagenPerfil,
+    cerrarSesion:cerrarSesion,
     buscarUsuario: buscarUsuario,
     datosUsuario: datosUsuario,
     filtroUsuario: filtroUsuario,

@@ -21,6 +21,11 @@ function mostrarTodas(request, response, next) {
     });
 }
 
+function getFormularPregunta(request, response, next) {
+    response.status(200);
+    response.render("formularPregunta", { errorMsg: null });
+}
+
 function formularPregunta(request, response, next) {
     if (utils.createTask(request.body.preguntaNueva).tags.length > 5) {
         response.status(200);
@@ -37,7 +42,7 @@ function formularPregunta(request, response, next) {
                         next(err);
                     }
                     else {
-                        response.redirect("/preguntas");
+                        response.redirect("/pregunta/preguntas");
                     }
                 });
             }
@@ -137,7 +142,7 @@ function formularRespuesta(request, response, next) {
                     next(err);
                 }
                 else {
-                    response.redirect("/preguntas");
+                    response.redirect("/pregunta/preguntas");
                 }
             });
         }
@@ -167,7 +172,7 @@ function actualizarVotos(request, response, next) {
                                         next(err);
                                     }
                                     else {
-                                        response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                                        response.redirect("/pregunta/infoPregunta/" + request.body.IdPregunta);
                                     }
                                 });
                             }
@@ -185,13 +190,13 @@ function actualizarVotos(request, response, next) {
                                 next(err);
                             }
                             else {
-                                response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                                response.redirect("/pregunta/infoPregunta/" + request.body.IdPregunta);
                             }
                         });
                     }
                 });
             } else {
-                response.redirect("/infoPregunta/" + request.body.IdPregunta);
+                response.redirect("/pregunta/infoPregunta/" + request.body.IdPregunta);
             }
         }
     });
@@ -219,7 +224,7 @@ function actualizarVotosRespuesta(request, response, next) {
                                         next(err);
                                     }
                                     else {
-                                        response.redirect("/infoPregunta/" + request.body.idP);
+                                        response.redirect("/pregunta/infoPregunta/" + request.body.idP);
                                     }
                                 });
                             }
@@ -237,13 +242,13 @@ function actualizarVotosRespuesta(request, response, next) {
                                 next(err);
                             }
                             else {
-                                response.redirect("/infoPregunta/" + request.body.idP);
+                                response.redirect("/pregunta/infoPregunta/" + request.body.idP);
                             }
                         });
                     }
                 });
             } else {
-                response.redirect("/infoPregunta/" + request.body.idP);
+                response.redirect("/pregunta/infoPregunta/" + request.body.idP);
             }
         }
     });
@@ -253,6 +258,7 @@ function actualizarVotosRespuesta(request, response, next) {
 
 module.exports = {
     mostrarTodas: mostrarTodas,
+    getFormularPregunta:getFormularPregunta,
     formularPregunta: formularPregunta,
     filtroTexto: filtroTexto,
     filtroEtiqueta: filtroEtiqueta,

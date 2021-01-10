@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv=”Content-Type” content=”text/html; charset=UTF-8″ />
-    <link rel="stylesheet" href="..\css\preguntas.css">
+    <link rel="stylesheet" href="\css\preguntas.css">
     <link rel="icon" type="img/png" href="">
     <title>Preguntas</title>
 </head>
@@ -28,7 +28,7 @@
                 </estilo1>
             </div>
             <div class="formularPregunta">
-                <a href="/formularPregunta">
+                <a href="/pregunta/formularPregunta">
                     <button class="formular" type="submit">Formular Pregunta</button>
                 </a>
             </div>
@@ -39,7 +39,7 @@
             <div class="contenidoPregunta">
                 <div class="contenido">
                     <div class=c>
-                        <a href="/infoPregunta/<%=q.idPregunta%>" class="estiloP"><%=q.titulo%></a>
+                        <a href="/pregunta/infoPregunta/<%=q.idPregunta%>" class="estiloP"><%=q.titulo%></a>
                     </div>
                     <div class=c>
                         <estilo2><%=q.cuerpo.substring(0, 150)%></estilo2>
@@ -51,7 +51,7 @@
                     <div class="tags c">
                         <%q.tags.forEach(function(e){%>
                             <%if(e != "null"){ %>
-                                <div class=tag><a href="/preguntasEtiqueta/<%=e%>"><%=e%></a></div>
+                                <div class=tag><a href="/pregunta/preguntasEtiqueta/<%=e%>"><%=e%></a></div>
                             <%}%>
                         <%})%>
                     </div>
@@ -62,10 +62,10 @@
                         <estilo2>Formulada el <%=q.fecha.toDateString()%></estilo2>
                     </div>
                     <div class="imagen c">
-                        <img src="/imagenUsuario/<%=q.imagen%>">
+                        <img src="/usuario/imagenUsuario/<%=q.imagen%>">
                     </div>
                     <div class="nombre c">
-                        <a href="/perfilUsuario/<%=q.idUsuario%>"><%=q.nombre%></a>
+                        <a href="/usuario/perfilUsuario/<%=q.idUsuario%>"><%=q.nombre%></a>
                     </div>
                 </div>
             </div>

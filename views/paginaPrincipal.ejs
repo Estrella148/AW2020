@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="..\css\paginaPrincipal.css">
+    <link rel="stylesheet" href="\css\paginaPrincipal.css">
     <link rel="icon" type="img/png" href="">
     <title>Pagina Principal</title>
 </head>
@@ -14,17 +14,17 @@
     <div class="cabecera">
         <div class="opciones">
             <div class="boton">
-                <a href="/preguntas">
+                <a href="/pregunta/preguntas">
                     <button class="preguntas" type="submit">Preguntas</button>
                 </a>
             </div>
             <div class="boton">
-                <a href="/preguntasSinResponder">
+                <a href="/pregunta/preguntasSinResponder">
                     <button class="sinResponder" type="submit">Sin responder</button>
                 </a>
             </div>
             <div class="boton">
-                <a href="/busquedaUsuario">
+                <a href="/usuario/busquedaUsuario">
                     <button class="usuarios" type="submit">Usuarios</button>
                 </a>
             </div>
@@ -34,15 +34,15 @@
         </div>
         <div class="perfil">
             <div class="imagenPerfil">
-                <img src="/imagenUsuario/">
+                <img src="/usuario/imagenUsuario/">
             </div>
             <div class="nombrePerfil">
-                <a class="estiloEnlace" href="/perfilUsuario/<%=usuario.id%>">
+                <a class="estiloEnlace" href="/usuario/perfilUsuario/<%=usuario.id%>">
                     <%=usuario.nombre%>
                 </a>
             </div>
             <div class="boton">
-                <a href="/cerrarSesion">
+                <a href="/usuario/cerrarSesion">
                     <button class="cerrarSesion" type="submit">Cerrar sesión</button>
                 </a>
             </div>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="buscador">
-        <form method="POST" action="preguntasText">
+        <form method="POST" action="/pregunta/preguntasText">
         <button class="buscar" type="submit">Buscar</button>
         <input type="search" name="buscador">
          </form> 

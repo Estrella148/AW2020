@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="..\css\busquedasUsuario.css">
+    <link rel="stylesheet" href="\css\busquedasUsuario.css">
     <link rel="icon" type="img/png" href="">
     <title>Busqueda Usuario</title>
 </head>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="filtrador">
-        <form method="POST" action="filtrarUsuario">
+        <form method="POST" action="/usuario/filtrarUsuario">
             <input class= "inFil" type="search" name="buscadorUsuario">
             <button class="filtrar" type="submit">Filtrar</button>
         </form>
@@ -26,10 +26,10 @@
         <%usersList.forEach(function(user){%>
             <div class="usuario">
                 <div class="imagen">
-                    <img src="/imagenUsuario/<%=user.imagen%>">
+                    <img src="/usuario/imagenUsuario/<%=user.imagen%>">
                 </div>
                 <div class="nombre">
-                    <a class="estiloEnlace" href="/perfilUsuario/<%=user.id%>"><%=user.nombre%></a>
+                    <a class="estiloEnlace" href="/usuario/perfilUsuario/<%=user.id%>"><%=user.nombre%></a>
                 </div>
                 <div class="reputacion">
                     <h3><%=user.reputacion%></h3>
@@ -37,7 +37,7 @@
                 <%listaEtiquetas.forEach(function(e){%>
                     <%if(e.id==user.id && e.etiquetaMax != null){ %>   
                     <div class="tags">
-                        <a class="tag" href="/preguntasEtiqueta/<%=e.etiquetaMax%>"><%=e.etiquetaMax%></a>
+                        <a class="tag" href="/pregunta/preguntasEtiqueta/<%=e.etiquetaMax%>"><%=e.etiquetaMax%></a>
                     </div>
                     <%}%>
                 <%})%>
