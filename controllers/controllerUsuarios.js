@@ -15,7 +15,7 @@ function crearCuenta(request, response, next) {
     if (request.body.password1 === request.body.password2) {
         if (request.file) {//si se sube fichero
             if (request.file.mimetype === "image/png" || request.file.mimetype === "image/jpeg") {
-                imagen = request.file.originalname;
+                imagen = request.file.filename;
             } else {
                 fs.unlink(request.file.path, function (err) {//para eliminar el archivo cuando hay un error en el registro
                     if (err) {
