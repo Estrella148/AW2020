@@ -3,8 +3,7 @@ const DAOUsuarios = require("../models/DAOUsuarios");
 const config = require("../config");
 const path = require("path");
 const mysql = require("mysql");
-// const pool = require("../pool");
-// let daoUsuario = new DAOUsuarios(pool.obtenerPool());
+const fs = require("fs");
 // Crear un pool de conexiones a la base de datos de MySQL
 const pool = mysql.createPool(config.mysqlConfig);
 // Crear instancia 
@@ -16,7 +15,7 @@ function crearCuenta(request, response, next) {
     if (request.body.password1 === request.body.password2) {
         if (request.file) {//si se sube fichero
             if (request.file.mimetype === "image/png" || request.file.mimetype === "image/jpeg") {
-                imagen = request.file.filename;
+                imagen = request.file.originalname;
             } else {
                 fs.unlink(request.file.path, function (err) {//para eliminar el archivo cuando hay un error en el registro
                     if (err) {

@@ -4,9 +4,8 @@ const routerU=express.Router()
 const controllerU= require("../controllers/controllerUsuarios")
 const multer = require("multer");
 const path = require("path");
-const multerFactory = multer({ dest: path.join(__dirname, "profile_imgs") });
+const multerFactory = multer(/* {dest: path.join(__dirname, "../controllers/profile_imgs") } */);
 const middlewares = require("../middleware/middlewares");
-
 
 routerU.post("/paginaInicial", controllerU.logearse);
 

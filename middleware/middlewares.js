@@ -1,7 +1,4 @@
 "use strict";
-const modelo = require("../models/DAOUsuarios");
-const pool = require("../pool");
-let daoUsuario = new modelo(pool.obtenerPool());
 
 //Middleware control de acceso
 function controlAcceso(request, response, next) {
