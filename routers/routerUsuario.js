@@ -13,7 +13,7 @@ routerU.post("/paginaInicial", controllerU.logearse);
 //Pagina principal
 routerU.get("/paginaPrincipal", middlewares.controlAcceso, controllerU.paginaPrincipal);
 //Perfil Usuario
-routerU.get("/perfilUsuario/:id", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.datosUsuario);
+routerU.get("/perfilUsuario/:id", middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, controllerU.datosUsuario);
 //Insertar usuario
 routerU.post("/crearCuenta", multerFactory.single("img"), controllerU.crearCuenta);
 //Crear Cuenta
@@ -21,9 +21,9 @@ routerU.get("/crearCuenta", controllerU.getCrearCuenta);
 //Imagenes de Perfil
 routerU.get("/imagenUsuario/:id?", middlewares.controlAcceso, controllerU.imagenPerfil);
 //Buscar Usuario
-routerU.get("/busquedaUsuario", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, controllerU.buscarUsuario);
+routerU.get("/busquedaUsuario", middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, controllerU.buscarUsuario);
 //Filtro Usuarios
-routerU.post("/filtrarUsuario", middlewares.controlAcceso, controllerU.controlAccesoDatosUsuario, middlewares.cAPreguntasText, controllerU.filtroUsuario);
+routerU.post("/filtrarUsuario", middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, middlewares.cAPreguntasText, controllerU.filtroUsuario);
 //Desconectar
 routerU.get("/cerrarSesion", middlewares.controlAcceso,controllerU.cerrarSesion);
 

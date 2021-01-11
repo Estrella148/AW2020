@@ -67,8 +67,8 @@ function getCrearCuenta(request, response, next) {
 }
 
 function img_aleatoria() {
-    let array = ["estandar1.jpg", "estandar2.png", "estandar3.jpg"];
-    return array[Math.floor(Math.random() * 3)];
+    let array = ["estandar1.jpg", "estandar2.png", "estandar3.jpg","estandar4.jpg"];
+    return array[Math.floor(Math.random() * 4)];
 }
 
 function logearse(request, response, next) {
@@ -193,18 +193,7 @@ function filtroUsuario(request, response, next) {
     })
 }
 
-//Lo usamos antes de entrar a otra página.
-function controlAccesoDatosUsuario(request, response, next) {
-    daoU.getUsuario(request.session.currentUser, function (err, usuario) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.locals.usuario = usuario;
-            next();
-        }
-    })
-}
+
 
 module.exports = {
     crearCuenta: crearCuenta,
@@ -215,7 +204,6 @@ module.exports = {
     cerrarSesion:cerrarSesion,
     buscarUsuario: buscarUsuario,
     datosUsuario: datosUsuario,
-    filtroUsuario: filtroUsuario,
-    controlAccesoDatosUsuario: controlAccesoDatosUsuario
+    filtroUsuario: filtroUsuario
 };
 

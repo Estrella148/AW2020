@@ -1,4 +1,11 @@
 "use strict";
+const DAOUsuarios = require("../models/DAOUsuarios");
+const config = require("../config");
+const mysql = require("mysql");
+// Crear un pool de conexiones a la base de datos de MySQL
+const pool = mysql.createPool(config.mysqlConfig);
+// Crear instancia 
+const daoU = new DAOUsuarios(pool);
 
 //Middleware control de acceso
 function controlAcceso(request, response, next) {
@@ -9,6 +16,18 @@ function controlAcceso(request, response, next) {
     else {
         response.redirect("/paginaInicial");
     }
+}
+//Lo usamos antes de entrar a otra página.
+function controlAccesoDatosUsuario(request, response, next) {
+    daoU.getUsuario(request.session.currentUser, function (err, usuario) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.locals.usuario = usuario;
+            next();
+        }
+    })
 }
 
 function cAPreguntas(request, response, next) {
@@ -34,6 +53,7 @@ function cAPreguntasEtiqueta(request, response, next) {
 
 module.exports ={
     controlAcceso: controlAcceso,
+    controlAccesoDatosUsuario:controlAccesoDatosUsuario,
     cAPreguntas: cAPreguntas,
     cAPreguntasSinResponder: cAPreguntasSinResponder,
     cAPreguntasText: cAPreguntasText,
