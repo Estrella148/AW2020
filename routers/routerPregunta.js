@@ -1,7 +1,6 @@
 "use strict";
 const express = require("express");
 const routerP=express.Router();
-const controllerU= require("../controllers/controllerUsuarios")
 const controllerP= require("../controllers/controllerPreguntas")
 const middlewares = require("../middleware/middlewares");
 
