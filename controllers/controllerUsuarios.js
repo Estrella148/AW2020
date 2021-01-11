@@ -67,7 +67,7 @@ function getCrearCuenta(request, response, next) {
 }
 
 function img_aleatoria() {
-    let array = ["estandar1.jpg", "estandar2.png", "estandar3.jpg","estandar4.jpg"];
+    let array = ["estandar1.png", "estandar2.png", "estandar3.png","estandar4.jpg"];
     return array[Math.floor(Math.random() * 4)];
 }
 
@@ -102,14 +102,14 @@ function paginaPrincipal(request, response, next) {
 
 function imagenPerfil(request, response, next) {
     if (request.params.id) {
-        response.sendFile(path.join(__dirname, "profile_imgs", request.params.id));
+        response.sendFile(path.join(__dirname, "../profile_imgs", request.params.id));
     }
     daoU.getUserImageName(request.session.currentUser, function (err, image) {
         if (err) {
             next(err);
         }
         else {
-            response.sendFile(path.join(__dirname, "profile_imgs", image));
+            response.sendFile(path.join(__dirname, "../profile_imgs", image));
         }
     });
 }

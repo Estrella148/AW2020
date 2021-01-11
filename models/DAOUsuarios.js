@@ -291,7 +291,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                let etiquetaList=new Array();
+                let etiquetaList = new Array();
                 connection.query("SELECT etiquetas.nombre, usuarios.id FROM usuarios JOIN preguntas ON usuarios.id = preguntas.idUsuario JOIN etiquetas ON etiquetas.idPregunta = preguntas.idPregunta\
                 ORDER BY usuarios.id, etiquetas.nombre",
                     function (err, rows) {
@@ -301,36 +301,38 @@ class DAOUsuarios {
                         } else {
                             let cont = 0; let max = 0;
                             let etiquetaMax = null;
-                            if (rows[0].nombre != null || rows[0] != undefined) {
-                                let etiqueta = rows[0].nombre;
-                                let id = rows[0].id;
-                                rows.forEach(e => {
-                                    if (e.id == id) {
-                                        if (e.nombre === etiqueta) {
-                                            cont++;
-                                            if (cont > max) {
-                                                max = cont;
-                                                etiquetaMax = etiqueta;
-                                            } else if (cont === max) {
-                                                etiquetaMax = null;
+                            if (rows[0] != undefined) {
+                                if (rows[0].nombre != null) {
+                                    let etiqueta = rows[0].nombre;
+                                    let id = rows[0].id;
+                                    rows.forEach(e => {
+                                        if (e.id == id) {
+                                            if (e.nombre === etiqueta) {
+                                                cont++;
+                                                if (cont > max) {
+                                                    max = cont;
+                                                    etiquetaMax = etiqueta;
+                                                } else if (cont === max) {
+                                                    etiquetaMax = null;
+                                                }
+                                            } else {
+                                                etiqueta = e.nombre;
+                                                cont = 1;
+                                                if (cont === max) {
+                                                    etiquetaMax = null;
+                                                }
+
                                             }
                                         } else {
-                                            etiqueta = e.nombre;
+                                            etiquetaList.push({ id, etiquetaMax });
+                                            id = e.id;
                                             cont = 1;
-                                            if (cont === max) {
-                                                etiquetaMax = null;
-                                            }
-                                            
+                                            etiqueta = e.nombre;
+                                            etiquetaMax = etiqueta;
                                         }
-                                    } else {
-                                        etiquetaList.push({ id, etiquetaMax });
-                                        id = e.id;
-                                        cont = 1;
-                                        etiqueta = e.nombre;
-                                        etiquetaMax = etiqueta;
-                                    }
-                                });
-                                etiquetaList.push({ id, etiquetaMax });
+                                    });
+                                    etiquetaList.push({ id, etiquetaMax });
+                                }
                             }
                             callback(null, etiquetaList);
                         }
