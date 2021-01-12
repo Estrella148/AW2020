@@ -1,0 +1,38 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto Slab', serif;
+
+}
+
+body{
+    background-image: url("/img/fondo.jpg");
+    background-attachment: fixed;
+    background-size: 120%;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Xanh+Mono&display=swap');
+.cabecera{
+    display: fixed;
+    flex-wrap: wrap;
+    font-size: 70px;
+    text-align: center;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.555), rgba(255, 166, 0, 0.404), black,  rgba(48, 117, 126, 0.404),  rgba(0, 0, 0, 0.555));
+}
+
+
+h1{
+    color: orange;
+    text-shadow: 1px 5px rgba(16, 227, 255, 0.726);
+}
+
+h1:hover{
+    color:  rgb(16, 227, 255);
+    text-shadow: 1px 5px orange;
+}
+
+.errorEstilo{
+    color: orange;
+    font-size: 40px;
+}
