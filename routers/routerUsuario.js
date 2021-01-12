@@ -13,7 +13,7 @@ routerU.post("/paginaInicial", controllerU.logearse);
 //Pagina principal
 routerU.get("/paginaPrincipal", middlewares.controlAcceso, controllerU.paginaPrincipal);
 //Perfil Usuario
-routerU.get("/perfilUsuario/:id", middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, controllerU.datosUsuario);
+routerU.get("/perfilUsuario/:id",middlewares.controlAccesoExisteId, middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, controllerU.datosUsuario);
 //Insertar usuario
 routerU.post("/crearCuenta", multerFactory.single("img"), controllerU.crearCuenta);
 //Crear Cuenta

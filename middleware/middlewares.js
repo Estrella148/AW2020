@@ -30,6 +30,17 @@ function controlAccesoDatosUsuario(request, response, next) {
     })
 }
 
+function controlAccesoExisteId(request, response, next) {
+    daoU.getId(request.params.id, function (err, usuario) {
+        if (err) {
+            next(err);
+        }
+        else {
+            next();
+        }
+    })
+}
+
 function cAPreguntas(request, response, next) {
     response.locals.msg = "Todas las preguntas";
     next();
@@ -54,6 +65,7 @@ function cAPreguntasEtiqueta(request, response, next) {
 module.exports ={
     controlAcceso: controlAcceso,
     controlAccesoDatosUsuario:controlAccesoDatosUsuario,
+    controlAccesoExisteId:controlAccesoExisteId,
     cAPreguntas: cAPreguntas,
     cAPreguntasSinResponder: cAPreguntasSinResponder,
     cAPreguntasText: cAPreguntasText,

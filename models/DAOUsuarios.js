@@ -104,6 +104,25 @@ class DAOUsuarios {
         );
     }
 
+    getId(id, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT * FROM usuarios WHERE id = ?", [id],
+                    function (err, rows) {
+                        connection.release(); // devolver al pool la conexión
+                        if (rows.length == 0) {//la consulta no ha devuelto resultados
+                            callback(new Error("No existe el usuario"));
+                        } else {
+                            callback(null);
+                        }
+                    });
+            }
+        }
+        );
+    }
 
     /*Imagen de perfil de usuario: Obtienes el fichero de la imagen del usuario identificado por su email*/
     getUserImageName(email, callback) {
