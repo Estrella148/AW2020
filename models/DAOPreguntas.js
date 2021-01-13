@@ -195,11 +195,9 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query("ALTER TABLE preguntas AUTO_INCREMENT = 0");
                 connection.query("INSERT INTO preguntas (titulo, cuerpo, idUsuario, fecha, contVisitas, contVotos)\
                 VALUES (?,?,?,CURDATE(),0,0)", [titulo, cuerpo, idUsuario],
                     function (err, rows) {
-                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -213,6 +211,7 @@ class DAOPreguntas {
                             //Insertar las etiquetas
                             connection.query("INSERT INTO etiquetas VALUES ?", [array],
                                 function (err, rows) {
+                                    connection.release();
                                     if (err) {
                                         callback(new Error("Error de acceso a la base de datos"));
                                     }
