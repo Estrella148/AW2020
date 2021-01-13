@@ -67,8 +67,8 @@ function getCrearCuenta(request, response, next) {
 }
 
 function img_aleatoria() {
-    let array = ["estandar1.png", "estandar2.png", "estandar3.png","estandar4.jpg"];
-    return array[Math.floor(Math.random() * 4)];
+    let array = ["defecto1.png", "defecto2.png", "defecto3.png"];
+    return array[Math.floor(Math.random() * 3)];
 }
 
 function logearse(request, response, next) {
