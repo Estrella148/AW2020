@@ -82,6 +82,7 @@ function logearse(request, response, next) {
                 response.redirect("/usuario/paginaPrincipal");
             }
             else {
+                response.status(200);
                 response.render("paginaInicial", { errorMsg: "Dirección de correo y/o contraseña no válidos" });
             }
         }
