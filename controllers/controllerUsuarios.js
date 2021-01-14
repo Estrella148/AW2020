@@ -61,7 +61,6 @@ function getCrearCuenta(request, response, next) {
         response.redirect("/usuario/paginaPrincipal");
     } else {
         response.status(200);
-
         response.render("crearCuenta", { errorMsg: null });
     }
 }
@@ -102,17 +101,23 @@ function paginaPrincipal(request, response, next) {
 }
 
 function imagenPerfil(request, response, next) {
+    
     if (request.params.id) {
+        response.status(200)
         response.sendFile(path.join(__dirname, "../profile_imgs", request.params.id));
+    }else{
+        daoU.getUserImageName(request.session.currentUser, function (err, image) {
+            if (err) {
+                next(err);
+            }
+            else {
+                response.status(200)
+                response.sendFile(path.join(__dirname, "../profile_imgs", image));
+            }
+        });
     }
-    daoU.getUserImageName(request.session.currentUser, function (err, image) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.sendFile(path.join(__dirname, "../profile_imgs", image));
-        }
-    });
+
+   
 }
 
 function cerrarSesion(request, response, next) {
