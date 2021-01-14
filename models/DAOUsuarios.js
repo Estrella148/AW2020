@@ -214,7 +214,7 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT nombre,cantidad FROM medallaplata WHERE idUsuario = ?", [idUsuario],
                     function (err, rows) {
-
+                        connection.release(); // devolver al pool la conexión
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos para ver plata"));
                         }
@@ -245,7 +245,6 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT nombre,cantidad FROM medallabronce WHERE idUsuario = ?", [idUsuario],
                     function (err, rows) {
-
                         connection.release(); // devolver al pool la conexión
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos para ver bronces"));
@@ -278,6 +277,7 @@ class DAOUsuarios {
             else {
                 connection.query("SELECT id, nombre, reputacion, imagen FROM usuarios",
                     function (err, rows) {
+                        connection.release();
                         if (rows.length == 0) {//la consulta no ha devuelto resultados
                             callback(new Error("No existe ningún usuario"));
                         } else {
