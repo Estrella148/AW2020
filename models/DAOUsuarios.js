@@ -325,29 +325,31 @@ class DAOUsuarios {
                                     let etiqueta = rows[0].nombre;
                                     let id = rows[0].id;
                                     rows.forEach(e => {
-                                        if (e.id == id) {
-                                            if (e.nombre === etiqueta) {
-                                                cont++;
-                                                if (cont > max) {
-                                                    max = cont;
-                                                    etiquetaMax = etiqueta;
-                                                } else if (cont === max) {
-                                                    etiquetaMax = null;
+                                        if (e.nombre != "null") {
+                                            if (e.id === id) {
+                                                if (e.nombre === etiqueta) {
+                                                    cont++;
+                                                    if (cont > max) {
+                                                        max = cont;
+                                                        etiquetaMax = etiqueta;
+                                                    } else if (cont === max) {
+                                                        etiquetaMax = null;
+                                                    }
+                                                } else {
+                                                    etiqueta = e.nombre;
+                                                    cont = 1;
+                                                    if (cont === max) {
+                                                        etiquetaMax = null;
+                                                    }
                                                 }
                                             } else {
-                                                etiqueta = e.nombre;
+                                                etiquetaList.push({ id, etiquetaMax });
+                                                id = e.id;
                                                 cont = 1;
-                                                if (cont === max) {
-                                                    etiquetaMax = null;
-                                                }
-
+                                                max = 1;
+                                                etiqueta = e.nombre;
+                                                etiquetaMax = etiqueta;
                                             }
-                                        } else {
-                                            etiquetaList.push({ id, etiquetaMax });
-                                            id = e.id;
-                                            cont = 1;
-                                            etiqueta = e.nombre;
-                                            etiquetaMax = etiqueta;
                                         }
                                     });
                                     etiquetaList.push({ id, etiquetaMax });
