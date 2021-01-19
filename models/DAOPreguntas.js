@@ -4,121 +4,6 @@ class DAOPreguntas {
     constructor(pool) {
         this.pool = pool;
     }
-    //modificar Pregunta
-    modificarPregunta(titulo, cuerpo, idP, etiquetas, callback) {
-        console.log(idP)
-        this.pool.getConnection(function (err, connection) {
-            if (err) {
-                callback(new Error("Error de conexión a la base de datos"));
-            }
-            else {
-                connection.query("UPDATE preguntas SET titulo=?, cuerpo=? WHERE idPregunta=?", [titulo, cuerpo, idP],
-                    function (err, rows) {
-                        if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
-                        }
-                        else {
-                            console.log(idP)
-                            console.table(etiquetas.tags);
-                            let id = rows.insertId;
-                            let array = new Array();//array de etiquetas
-                            etiquetas.tags.forEach(element => {
-                                let val = [idP, element];
-                                array.push(val);
-                            });
-                            console.table(array);
-
-                            connection.query("DELETE FROM etiquetas WHERE idPregunta = ?", [idP],
-                                function (err, rows) {
-
-                                    if (err) {
-                                        callback(new Error("Error de acceso a la etiquetas en base de datos"));
-                                    }
-                                    else {
-                                        connection.query("INSERT INTO etiquetas VALUES ?", [array],
-                                            function (err, rows) {
-
-                                                if (err) {
-                                                    callback(new Error("Error de acceso a la etiquetas en base de datos"));
-                                                }
-                                                else {
-                                                    callback(null);
-                                                }
-                                            });
-                                    }
-                                });
-                        }
-                        connection.release();
-                    });
-            }
-        });
-    }
-
-    //Mostrar mis preguntas.
-    mostrarPreguntasUsuario(id, callback) {
-        this.pool.getConnection(function (err, connection) {
-            if (err) {
-                callback(new Error("Error de conexión a la base de datos"));
-            }
-            else {
-                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, preguntas.idUsuario, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
-                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE preguntas.idUsuario=?", [id],
-                    function (err, rows) {
-                        connection.release(); // devolver al pool la conexión
-                        if (err) {
-                            callback(new Error("Error acceso a la base de datos"));
-                        } else {
-                            let array = new Array();
-                            let object = new Object();
-                            let numPreguntas = 0;
-                            rows.forEach(element => {
-                                if (array[element.idPregunta] === undefined) {
-                                    object = {
-                                        idPregunta: element.idPregunta,
-                                        titulo: element.titulo,
-                                        cuerpo: element.cuerpo,
-                                        fecha: element.fecha,
-                                        nombre: element.usuario,
-                                        imagen: element.imagen,
-                                        idUsuario: element.idUsuario,
-                                        tags: [element.etiqueta]
-                                    };
-                                    array[object.idPregunta] = object;
-                                    numPreguntas++;
-                                }
-                                else {
-                                    array[object.idPregunta].tags.push(element.etiqueta);
-                                }
-                            });
-                            array.reverse();
-                            callback(null, array, numPreguntas);//devuelve el array
-                        }
-                    });
-            }
-        }
-        );
-    }
-
-    //Eliminar Pregunta
-    eliminarPregunta(id, callback) {
-        this.pool.getConnection(function (err, connection) {
-            if (err) {
-                callback(new Error("Error de conexión a la base de datos"));
-            }
-            else {
-                connection.query("DELETE FROM preguntas WHERE idPregunta =?", [id],
-                    function (err, rows) {
-                        connection.release();
-                        if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
-                        }
-                        else {
-                            callback(null);
-                        }
-                    });
-            }
-        });
-    }
 
     //Mostrar todas las preguntas.
     mostrarTodasPreguntas(callback) {
@@ -326,7 +211,7 @@ class DAOPreguntas {
                             //Insertar las etiquetas
                             connection.query("INSERT INTO etiquetas VALUES ?", [array],
                                 function (err, rows) {
-
+                                    
                                     if (err) {
                                         callback(new Error("Error de acceso a la base de datos"));
                                     }
@@ -396,7 +281,7 @@ class DAOPreguntas {
                                 //actualizar a que ha votado el usuario esa pregunta
                                 connection.query("UPDATE votospregunta SET votoPregunta=1 WHERE idUsuario=? AND idPregunta=?", [idU, idP],
                                     function (err, rows) {
-
+                                        
                                         if (err) {
                                             callback(new Error("Error de acceso a la Base de datos"));
                                         }
@@ -445,7 +330,7 @@ class DAOPreguntas {
                                         else {//actualiza tabla según sea un voto positivo o negativo
                                             connection.query("UPDATE respuestas SET contVotos=contVotos+1 WHERE respuestas.idRespuesta=?", [idRespuesta],
                                                 function (err, rows) {
-
+                                                   
                                                     if (err) {
                                                         callback(new Error("Error de acceso a la Base de datos"));
                                                     }
@@ -489,7 +374,7 @@ class DAOPreguntas {
                                         if (total < 1) { total = 1; }
                                         connection.query("UPDATE usuarios SET reputacion=? WHERE id = ?", [total, idU],
                                             function (err, rows) {
-
+                                               
                                                 if (err) {
                                                     callback(new Error("Error de acceso a la base de datos"));
                                                 }
@@ -612,7 +497,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                       
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -621,9 +506,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -646,7 +531,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -655,9 +540,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -680,7 +565,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallaplata (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                       
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -689,9 +574,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -714,7 +599,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallaoro (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -723,9 +608,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -771,7 +656,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                      
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos insertar medalla bronce"));
                                                         }
@@ -780,9 +665,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos actualizar medalla bron"));
                                                         }
@@ -805,7 +690,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallaplata (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                       
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -814,9 +699,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -839,7 +724,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallaoro (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -848,9 +733,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -896,7 +781,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallabronce (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -905,9 +790,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallabronce SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                       
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -930,7 +815,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallaplata (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                        
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -939,9 +824,9 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallaplata SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
-
+                                                       
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -964,7 +849,7 @@ class DAOPreguntas {
                                             if (rows[0] == undefined) {
                                                 connection.query("INSERT INTO medallaoro (idUsuario, nombre, cantidad) VALUES (?,?,1)", [usuario, nombre],
                                                     function (err, rows) {
-
+                                                       
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
                                                         }
@@ -973,7 +858,7 @@ class DAOPreguntas {
                                                         }
                                                     });
                                             } else {
-                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario, nombre],
+                                                connection.query("UPDATE medallaoro SET cantidad=cantidad+1 WHERE idUsuario=? AND nombre=?", [usuario,nombre],
                                                     function (err, rows) {
                                                         if (err) {
                                                             callback(new Error("Error de acceso a la base de datos"));
@@ -1097,19 +982,19 @@ class DAOPreguntas {
                                         else {//actualizar contador de visitas en preguntas
                                             connection.query("UPDATE preguntas SET contVisitas=contVisitas+1 WHERE preguntas.idPregunta=?", [idP],
                                                 function (err, rows) {
-
+                                                    
                                                     if (err) {
                                                         callback(new Error("Error de acceso a la Base de datos"));
                                                     }
                                                     else {
-                                                        callback(null, "false")
+                                                        callback(null,"false")
                                                     }
                                                 });
                                         }
                                     });
-                            } else {
-                                callback(null, "true")
-                            }
+                            }else{
+                                callback(null,"true")
+                            }  
                         }
                         connection.release();
                     })

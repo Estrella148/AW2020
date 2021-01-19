@@ -51,11 +51,6 @@ function cAPreguntasSinResponder(request, response, next) {
     next();
 }
 
-function cAPreguntasUsuario(request, response, next) {
-    response.locals.msg = "Tus preguntas";
-    next();
-}
-
 function cAPreguntasText(request, response, next) {
     response.locals.msg = "Resultados de la búsqueda ''" + request.body.buscador+ "''";
     next();
@@ -74,6 +69,5 @@ module.exports ={
     cAPreguntas: cAPreguntas,
     cAPreguntasSinResponder: cAPreguntasSinResponder,
     cAPreguntasText: cAPreguntasText,
-    cAPreguntasEtiqueta: cAPreguntasEtiqueta,
-    cAPreguntasUsuario:cAPreguntasUsuario
+    cAPreguntasEtiqueta: cAPreguntasEtiqueta
 }

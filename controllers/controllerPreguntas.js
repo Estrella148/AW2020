@@ -1,5 +1,5 @@
 "use strict";
-const utils = require("../utils");
+const utils=require("../utils");
 const DAOPreguntas = require("../models/DAOPreguntas");
 const config = require("../config");
 const mysql = require("mysql");
@@ -9,65 +9,6 @@ const pool = mysql.createPool(config.mysqlConfig);
 const daoP = new DAOPreguntas(pool);
 
 
-
-
-function mostrarPreguntasUsuario(request, response, next) {
-    daoP.mostrarPreguntasUsuario(response.locals.usuario.id, function (err, qList, numPreguntas) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.status(200);
-            response.render("preguntasUsuario", { qList: qList, numPreguntas: numPreguntas });
-        }
-    });
-}
-
-function eliminarPregunta(request, response, next) {
-    daoP.eliminarPregunta(request.body.IdPregunta, function (err) {
-        if (err) {
-            next(err);
-        }
-        else {
-            response.redirect("/pregunta/preguntas");
-        }
-    });
-}
-
-function getModificarPregunta(request, response, next) {
-    daoP.getPregunta(request.params.idPregunta, function (err, p, etiquetas) {
-        if (err) {
-            next(err);
-        }
-        else {
-            if (p.idUsuario == response.locals.usuario.id) { //si aparece el mod en todos 
-                response.status(200);
-                response.render("modificarPregunta", {errorMsg: null, p: p, etiquetas: etiquetas });
-            } else {
-                response.redirect("/pregunta/preguntas");
-            }
-        }
-    });
-}
-
-function modificarPregunta(request, response, next) {
-    if (utils.createTask(request.body.preguntaNueva).tags.length > 5) {
-        response.status(200);
-        response.render("modificarPregunta", { errorMsg: "Como máximo son 5 etiquetas" });
-    } else {
-        console.log( request.body.idP);
-        daoP.modificarPregunta(request.body.titulo, request.body.cuerpo, request.body.idP, utils.createTask(request.body.preguntaNueva), function (err) {
-            if (err) {
-                next(err);
-            }
-            else {
-                response.redirect("/pregunta/preguntas");
-            }
-        });
-    }
-
-}
-///////////////////////
 function mostrarTodas(request, response, next) {
     daoP.mostrarTodasPreguntas(function (err, qList, numPreguntas) {
         if (err) {
@@ -316,12 +257,8 @@ function actualizarVotosRespuesta(request, response, next) {
 
 
 module.exports = {
-    mostrarPreguntasUsuario: mostrarPreguntasUsuario,
-    eliminarPregunta: eliminarPregunta,
-    getModificarPregunta: getModificarPregunta,
-    modificarPregunta: modificarPregunta,
     mostrarTodas: mostrarTodas,
-    getFormularPregunta: getFormularPregunta,
+    getFormularPregunta:getFormularPregunta,
     formularPregunta: formularPregunta,
     filtroTexto: filtroTexto,
     filtroEtiqueta: filtroEtiqueta,
