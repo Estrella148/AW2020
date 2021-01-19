@@ -1,0 +1,72 @@
+<!--En la que ya estas iniciado sesión y tienes las opciones de botones a la izquierda-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv=”Content-Type” content=”text/html; charset=UTF-8″ />
+    <link rel="stylesheet" href="\css\formularPregunta.css">
+    <link rel="icon" type="img/png" href="\img\favicon404.png">
+    <title>Formular Pregunta</title>
+</head>
+
+<body>
+
+    <%-include("paginaPrincipal")%>
+
+        <div class="titulo2">
+            <h2>Modificar pregunta <%=p.idPregunta%></h2>
+        </div>
+        <form method="POST" action="/pregunta/modificarPregunta">
+            <div class="contenedorCuestion">
+                <div class="estiloCuestion">
+                    <div class="m">
+                        <h3>Titulo</h3>
+                    </div>
+                    <div class="m">
+                        <h4>Sé específico e imagina que estás haciendo la pregunta a otra persona</h4>
+                    </div>
+                    <div class="m">
+                        <input class="in1" type="text" name="titulo" value="<%=p.titulo%>" minlength="10" maxlength="200"  required>
+                    </div>
+                </div>
+
+                <div class="estiloCuestion">
+                    <div class="m">
+                        <h3>Cuerpo</h3>
+                    </div>
+                    <div class="m">
+                        <h4>Incluye toda la información que alguien necesitaría para responder tu pregunta</h4>
+                    </div>
+                    <div class="m">
+                        <input class="in2" type="text" name="cuerpo" value="<%=p.cuerpo%>" minlength="10" maxlength="500" required>
+                    </div>
+                </div>
+
+                <div class="estiloCuestion">
+                    <div class="m">
+                        <h3>Etiquetas</h3>
+                    </div>
+                    <div class="m">
+                        <h4>Añade hasta 5 etiquetas para describir sobre qué trata tu pregunta</h4>
+                    </div>
+                    <div class="m">
+                        <input class="in1" type="text" name="preguntaNueva">
+                    </div>
+                </div>
+
+                <div class="publica">
+                    <input type="hidden" name="idP" value=<%=p.idPregunta%>>
+                    <button class="publicaPregunta" type="submit">Confirmar Cambios</button>
+                </div>
+            </div>
+        </form>
+        <%if(errorMsg !=null){ %>
+            <div class="mensaje">
+                <p>
+                    <%=errorMsg%>
+                </p>
+            </div>
+        <%}%>
+</body>
+
+</html>

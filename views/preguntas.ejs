@@ -63,6 +63,9 @@
                         <input type="hidden" name="IdPregunta" value=<%=q.idPregunta%>>
                         <button class="eliminar" type="submit" alt="eliminar">X</button>
                     </form>
+                        <a href="/pregunta/modificarPregunta/<%=q.idPregunta%>">
+                            <button class="modificar" type="submit" alt="modificar">MOD</button>
+                        </a>
                 </div>
             </div>
             <%})%>

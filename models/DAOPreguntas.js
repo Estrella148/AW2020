@@ -4,6 +4,55 @@ class DAOPreguntas {
     constructor(pool) {
         this.pool = pool;
     }
+    //modificar Pregunta
+    modificarPregunta(titulo, cuerpo, idP, etiquetas, callback) {
+        console.log(idP)
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("UPDATE preguntas SET titulo=?, cuerpo=? WHERE idPregunta=?", [titulo, cuerpo, idP],
+                    function (err, rows) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            console.log(idP)
+                            console.table(etiquetas.tags);
+                            let id = rows.insertId;
+                            let array = new Array();//array de etiquetas
+                            etiquetas.tags.forEach(element => {
+                                let val = [idP, element];
+                                array.push(val);
+                            });
+                            console.table(array);
+
+                            connection.query("DELETE FROM etiquetas WHERE idPregunta = ?", [idP],
+                                function (err, rows) {
+
+                                    if (err) {
+                                        callback(new Error("Error de acceso a la etiquetas en base de datos"));
+                                    }
+                                    else {
+                                        connection.query("INSERT INTO etiquetas VALUES ?", [array],
+                                            function (err, rows) {
+
+                                                if (err) {
+                                                    callback(new Error("Error de acceso a la etiquetas en base de datos"));
+                                                }
+                                                else {
+                                                    callback(null);
+                                                }
+                                            });
+                                    }
+                                });
+                        }
+                        connection.release();
+                    });
+            }
+        });
+    }
 
     //Mostrar mis preguntas.
     mostrarPreguntasUsuario(id, callback) {

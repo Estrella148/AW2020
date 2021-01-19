@@ -1,0 +1,5 @@
+  <%if(q.idUsuario==usuario.id){ %>
+    <a href="/pregunta/modificarPregunta/<%=q.idPregunta%>">
+         <button class="modificar" type="submit" alt="modificar">MOD</button>
+    </a>
+<%}%>
