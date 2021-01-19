@@ -50,6 +50,51 @@ class DAOPreguntas {
         );
     }
 
+    //Mostrar todas las preguntas.
+    mostrarPreguntasUsuario(id,callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT preguntas.idPregunta, preguntas.titulo, preguntas.cuerpo, preguntas.idUsuario, usuarios.nombre as usuario,preguntas.fecha, usuarios.imagen, etiquetas.nombre as etiqueta\
+                FROM preguntas JOIN usuarios ON preguntas.idUsuario = usuarios.id JOIN etiquetas ON preguntas.idPregunta = etiquetas.idPregunta WHERE preguntas.idUsuario=?",[id],
+                    function (err, rows) {
+                        connection.release(); // devolver al pool la conexión
+                        if (err) {
+                            callback(new Error("Error acceso a la base de datos"));
+                        } else {
+                            let array = new Array();
+                            let object = new Object();
+                            let numPreguntas = 0;
+                            rows.forEach(element => {
+                                if (array[element.idPregunta] === undefined) {
+                                    object = {
+                                        idPregunta: element.idPregunta,
+                                        titulo: element.titulo,
+                                        cuerpo: element.cuerpo,
+                                        fecha: element.fecha,
+                                        nombre: element.usuario,
+                                        imagen: element.imagen,
+                                        idUsuario: element.idUsuario,
+                                        tags: [element.etiqueta]
+                                    };
+                                    array[object.idPregunta] = object;
+                                    numPreguntas++;
+                                }
+                                else {
+                                    array[object.idPregunta].tags.push(element.etiqueta);
+                                }
+                            });
+                            array.reverse();
+                            callback(null, array, numPreguntas);//devuelve el array
+                        }
+                    });
+            }
+        }
+        );
+    }
+
     mostrarPreguntasText(filtro, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {

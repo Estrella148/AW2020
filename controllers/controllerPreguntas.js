@@ -9,6 +9,22 @@ const pool = mysql.createPool(config.mysqlConfig);
 const daoP = new DAOPreguntas(pool);
 
 
+
+
+function mostrarPreguntasUsuario(request, response, next) {
+    console.log(response.locals.usuario.id);
+    daoP.mostrarPreguntasUsuario(response.locals.usuario.id, function (err, qList, numPreguntas) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.status(200);
+            response.render("preguntasUsuario", { qList: qList, numPreguntas: numPreguntas });
+        }
+    });
+}
+
+///////////////////////
 function mostrarTodas(request, response, next) {
     daoP.mostrarTodasPreguntas(function (err, qList, numPreguntas) {
         if (err) {
@@ -257,6 +273,7 @@ function actualizarVotosRespuesta(request, response, next) {
 
 
 module.exports = {
+    mostrarPreguntasUsuario:mostrarPreguntasUsuario,
     mostrarTodas: mostrarTodas,
     getFormularPregunta:getFormularPregunta,
     formularPregunta: formularPregunta,

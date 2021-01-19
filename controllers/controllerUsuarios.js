@@ -58,7 +58,7 @@ function crearCuenta(request, response, next) {
 
 function getCrearCuenta(request, response, next) {
     if (request.session.currentUser) {
-        response.redirect("/usuario/paginaPrincipal");
+        response.redirect("/pregunta/preguntasUsuario");
     } else {
         response.status(200);
         response.render("crearCuenta", { errorMsg: null });
@@ -78,7 +78,7 @@ function logearse(request, response, next) {
         else {
             if (result) {
                 request.session.currentUser = request.body.email;
-                response.redirect("/usuario/paginaPrincipal");
+                response.redirect("/pregunta/preguntasUsuario");
             }
             else {
                 response.status(200);
@@ -95,7 +95,7 @@ function paginaPrincipal(request, response, next) {
         }
         else {
             response.status(200);
-            response.render("paginaPrincipal", { usuario: usuario });
+            response.render("preguntasUsuario", { usuario: usuario });
         }
     });
 }

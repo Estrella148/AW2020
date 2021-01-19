@@ -4,6 +4,8 @@ const routerP=express.Router();
 const controllerP= require("../controllers/controllerPreguntas")
 const middlewares = require("../middleware/middlewares");
 
+
+routerP.get("/preguntasUsuario",middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, middlewares.cAPreguntasUsuario,controllerP.mostrarPreguntasUsuario);
 //Mostrar todas las preguntas
 routerP.get("/preguntas", middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, middlewares.cAPreguntas, controllerP.mostrarTodas);
    
