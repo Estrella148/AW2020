@@ -6,6 +6,9 @@ const middlewares = require("../middleware/middlewares");
 
 
 routerP.get("/preguntasUsuario",middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, middlewares.cAPreguntasUsuario,controllerP.mostrarPreguntasUsuario);
+routerP.post("/eliminarPregunta",middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario,middlewares.cAPreguntas, controllerP.eliminarPregunta)
+
+
 //Mostrar todas las preguntas
 routerP.get("/preguntas", middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, middlewares.cAPreguntas, controllerP.mostrarTodas);
    

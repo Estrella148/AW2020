@@ -58,6 +58,12 @@
                         <a href="/usuario/perfilUsuario/<%=q.idUsuario%>"><%=q.nombre%></a>
                     </div>
                 </div>
+                <div class="centrar">
+                    <form method="POST" action="/pregunta/eliminarPregunta">
+                        <input type="hidden" name="IdPregunta" value=<%=q.idPregunta%>>
+                        <button class="eliminar" type="submit" alt="eliminar">X</button>
+                    </form>
+                </div>
             </div>
             <%})%>
         </div>

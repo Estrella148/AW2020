@@ -62,6 +62,14 @@ button{
     cursor: pointer;
 }
 
+.eliminar{
+    background-color:red;
+    width: 50px;
+}
+.centrar{
+    justify-content: center;
+    align-items: center;
+}
 .perfil{
     width: 20%;
     flex-grow: 1;

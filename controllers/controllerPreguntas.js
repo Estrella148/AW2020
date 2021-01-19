@@ -12,7 +12,6 @@ const daoP = new DAOPreguntas(pool);
 
 
 function mostrarPreguntasUsuario(request, response, next) {
-    console.log(response.locals.usuario.id);
     daoP.mostrarPreguntasUsuario(response.locals.usuario.id, function (err, qList, numPreguntas) {
         if (err) {
             next(err);
@@ -24,6 +23,17 @@ function mostrarPreguntasUsuario(request, response, next) {
     });
 }
 
+function eliminarPregunta(request, response, next) {
+    console.log(request.body.IdPregunta);
+    daoP.eliminarPregunta(request.body.IdPregunta, function (err) {
+        if (err) {
+            next(err);
+        }
+        else {
+            response.redirect("/pregunta/preguntas");
+        }
+    });
+}
 ///////////////////////
 function mostrarTodas(request, response, next) {
     daoP.mostrarTodasPreguntas(function (err, qList, numPreguntas) {
@@ -274,6 +284,7 @@ function actualizarVotosRespuesta(request, response, next) {
 
 module.exports = {
     mostrarPreguntasUsuario:mostrarPreguntasUsuario,
+    eliminarPregunta:eliminarPregunta,
     mostrarTodas: mostrarTodas,
     getFormularPregunta:getFormularPregunta,
     formularPregunta: formularPregunta,

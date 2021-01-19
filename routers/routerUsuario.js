@@ -11,7 +11,7 @@ const middlewares = require("../middleware/middlewares");
 routerU.post("/paginaInicial", controllerU.logearse);
 
 //Pagina principal
-//routerU.get("/paginaPrincipal", middlewares.controlAcceso, controllerU.paginaPrincipal);
+routerU.get("/paginaPrincipal", middlewares.controlAcceso, controllerU.paginaPrincipal);
 //Perfil Usuario
 routerU.get("/perfilUsuario/:id",middlewares.controlAccesoExisteId, middlewares.controlAcceso, middlewares.controlAccesoDatosUsuario, controllerU.datosUsuario);
 //Insertar usuario

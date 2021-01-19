@@ -41,7 +41,7 @@ app.get("/", function (request, response) {
 app.get("/paginaInicial", function (request, response, next) {
 
     if (request.session.currentUser) {
-        response.redirect("/pregunta/preguntasUsuario");
+        response.redirect("/usuario/paginaPrincipal");
     } else {
         response.status(200);
         response.render("paginaInicial", { errorMsg: null });
